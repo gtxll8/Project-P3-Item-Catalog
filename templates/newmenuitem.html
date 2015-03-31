@@ -1,16 +1,36 @@
 <html>
+
 <body>
-<h1> New Menu Item </h1>
 
-<form action="{{url_for('newMenuItem', restaurant_id=restaurant_id )}}" method = 'POST'>
+<h1>{{restaurant.name}}</h1>
 
-<p>Name:</p>
+<!--MESSAGE FLASHING EXAMPLE -->
+{% with messages = get_flashed_messages() %}
+{% if messages %}
 
-<input type='text' size='30' name='name'>
+<ul>
+{% for message in messages %}
+  <li><strong>{{message}}</strong></li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
 
-<input type='submit' value='Create'>
 
-</form>
+{% for i in items %}
 
+<div>
+
+<p>{{i.name}}</p>
+
+<p>{{i.description}}</p>
+
+<p> {{i.price}} </p>
+
+</div>
+
+
+{% endfor %}
 </body>
+
 </html>
