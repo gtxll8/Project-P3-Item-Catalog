@@ -16,10 +16,12 @@ class Users(Base):
 
 
 class UserDetails(Base):
-    __tablename__ = 'userdetails'
+    __tablename__ = 'user_details'
 
+    id = Column(Integer, primary_key=True)
     handle = Column(String(80), nullable=False)
     email = Column(String(250), primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
 
 
 class SaleItem(Base):
@@ -30,8 +32,8 @@ class SaleItem(Base):
     description = Column(String(250))
     price = Column(String(8))
     category_id = Column(Integer, ForeignKey('category.id'))
-    seller_id = Column(Integer, ForeignKey('users.id'))
-    seller = relationship(Users)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user = relationship(Users)
 
 
 class Category(Base):
