@@ -8,11 +8,18 @@ from sqlalchemy import create_engine
 Base = declarative_base()
 
 
-class Sellers(Base):
-    __tablename__ = 'sellers'
+class Users(Base):
+    __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
+
+
+class UserDetails(Base):
+    __tablename__ = 'userdetails'
+
+    handle = Column(String(80), nullable=False)
+    email = Column(String(250), primary_key=True)
 
 
 class SaleItem(Base):
@@ -23,8 +30,8 @@ class SaleItem(Base):
     description = Column(String(250))
     price = Column(String(8))
     category_id = Column(Integer, ForeignKey('category.id'))
-    seller_id = Column(Integer, ForeignKey('sellers.id'))
-    seller = relationship(Sellers)
+    seller_id = Column(Integer, ForeignKey('users.id'))
+    seller = relationship(Users)
 
 
 class Category(Base):
