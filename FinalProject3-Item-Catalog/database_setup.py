@@ -26,7 +26,8 @@ class SaleItem(Base):
     seller_id = Column(Integer, ForeignKey('sellers.id'))
     seller = relationship(Sellers)
 
-class Category(Base)
+
+class Category(Base):
     __tablename__ = 'category'
 
     name = Column(String(80), nullable=False)
