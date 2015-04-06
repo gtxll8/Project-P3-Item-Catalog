@@ -35,20 +35,6 @@ class Category(Base):
     description = Column(String(250))
 
 
-
-
-    # We added this serialize function to be able to send JSON objects in a serializable format
-    @property
-    def serialize(self):
-        return {
-            'name': self.name,
-            'description': self.description,
-            'id': self.id,
-            'price': self.price,
-            'course': self.course,
-        }
-
-
 engine = create_engine('sqlite:///restaurantmenu.db')
 
 Base.metadata.create_all(engine)
