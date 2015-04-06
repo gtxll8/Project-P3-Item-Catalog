@@ -10,7 +10,6 @@
 		<h1>{{ user.name }}</h1>
 	</div>
 
-	<!-- <a href = "{{url_for('newMenuItem', restaurant_id = restaurant.id) }}">Create New Item</a> -->
 
 
 <div class = 'flash'>
@@ -49,9 +48,6 @@
 	
 	<div class = "editdeletepane">
 
-	<a href='{{url_for('editMenuItem',restaurant_id = restaurant.id, MenuID=i.id)}}' >Edit</a>
-	<a href='{{url_for('deleteMenuItem', restaurant_id = restaurant.id, MenuID=i.id)}}' >
-	Delete</a>
 	</div>
 
 
