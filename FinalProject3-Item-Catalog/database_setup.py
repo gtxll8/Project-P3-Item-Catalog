@@ -39,11 +39,11 @@ class SaleItem(Base):
 class Category(Base):
     __tablename__ = 'category'
 
+    id = Column(Integer, primary_key=True)
     name = Column(String(80), nullable=False)
-    id = Column(Integer, pimary_key=True)
     description = Column(String(250))
 
 
-engine = create_engine('sqlite:///restaurantmenu.db')
+engine = create_engine('sqlite:///salesite.db')
 
 Base.metadata.create_all(engine)
