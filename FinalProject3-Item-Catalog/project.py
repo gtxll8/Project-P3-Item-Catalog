@@ -25,7 +25,7 @@ session = DBSession()
 def salePage(user_id):
     user = session.query(Users).filter_by(id=user_id).first()
     items = session.query(SaleItem).filter_by(user_id=user.id)
-    return render_template('menu.html', user=user, items=items)
+    return render_template('seller_page.html', user=user, items=items)
 
 
 if __name__ == '__main__':
