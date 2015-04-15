@@ -4,6 +4,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
+from sqlalchemy.dialects.sqlite import BLOB
 
 Base = declarative_base()
 
@@ -31,6 +32,7 @@ class SaleItem(Base):
     id = Column(Integer, primary_key=True)
     description = Column(String(250))
     price = Column(String(8))
+    image = Column(BLOB)
     category_id = Column(Integer, ForeignKey('category.id'))
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship(Users)

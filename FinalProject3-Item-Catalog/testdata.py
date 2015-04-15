@@ -31,3 +31,8 @@ item1 = SaleItem(name="Laptop", description="Intel i5 HP Laptop in good conditio
 session.add(item1)
 session.commit()
 
+item2 = SaleItem(name="Tablet", description="Amazon reader HDX in good condition for sale", price="$90",
+                 category_id=1, user_id=1, user=user1)
+session.add(item2)
+session.commit()
+

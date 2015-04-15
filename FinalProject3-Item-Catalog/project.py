@@ -1,6 +1,14 @@
-from flask import Flask, render_template, url_for, request, redirect, flash, jsonify
+import os
+from werkzeug.utils import secure_filename
+from flask import Flask, render_template, url_for, request, redirect, flash, jsonify, request, redirect, url_for, \
+    send_from_directory
+
+UPLOAD_FOLDER = './static'
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -18,11 +26,46 @@ session = DBSession()
 
 # JSOn list only one item
 
+# testing start
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
+
+@app.route('/', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return redirect(url_for('uploaded_file', filename=filename))
+    return '''
+    <!doctype html>
+    <title>Upload new File</title>
+    <h1>Upload new File</h1>
+    <form action="" method=post enctype=multipart/form-data>
+      <p><input type=file name=file>
+         <input type=submit value=Upload>
+    </form>
+    '''
+
+
+@app.route('/show/<filename>')
+def uploaded_file(filename):
+    filename = 'http://127.0.0.1:5000/static/' + filename
+    return render_template('template.html', filename=filename)
+
+@app.route('/static/<filename>')
+def send_file(filename):
+    return send_from_directory(UPLOAD_FOLDER, filename)
+
+
+# testing stop
 
 @app.route('/')
 @app.route('/forsale/<int:user_id>/')
-def salePage(user_id):
+def sellerPage(user_id):
     user = session.query(Users).filter_by(id=user_id).first()
     items = session.query(SaleItem).filter_by(user_id=user.id)
     return render_template('seller_page.html', user=user, items=items)
