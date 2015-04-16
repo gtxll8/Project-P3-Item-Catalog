@@ -58,7 +58,7 @@ def upload_file():
 
 @app.route('/show/<filename>')
 def uploaded_file(filename):
-    filename = 'http://127.0.0.1:5000/static/' + filename
+    filename = url_for('static', filename=filename)
     return render_template('template.html', filename=filename)
 
 @app.route('/static/<filename>')
