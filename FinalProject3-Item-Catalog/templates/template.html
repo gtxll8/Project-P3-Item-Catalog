@@ -5,3 +5,14 @@
 {% else %}
   <h1>no image for whatever reason</h1>
 {% endif %}
+
+{% for i in items %}
+    <div class = 'nameAndPrice'>
+		<span class = 'name'><img src="{{ url_for('static' , filename=i.image_name | replace (' ','_'))}}"></p></span>
+
+
+		<p>{{i.price}} </p>
+	</span>
+	</div>
+
+{% endfor %}

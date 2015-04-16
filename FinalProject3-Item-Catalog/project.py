@@ -39,7 +39,7 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            editedItem = session.query(SaleItem).filter_by(id=1).one()
+            editedItem = session.query(SaleItem).filter_by(id=2).one()
             editedItem.image_name = file.filename
             session.add(editedItem)
             session.commit()
@@ -59,7 +59,8 @@ def upload_file():
 @app.route('/show/<filename>')
 def uploaded_file(filename):
     filename = url_for('static', filename=filename)
-    return render_template('template.html', filename=filename)
+    items = session.query(SaleItem).filter_by(user_id=1)
+    return render_template('template.html', filename=filename, items=items)
 
 @app.route('/static/<filename>')
 def send_file(filename):
