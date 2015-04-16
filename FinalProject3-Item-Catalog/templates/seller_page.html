@@ -10,7 +10,7 @@
 		<h1>{{ user.name }}</h1>
 	</div>
 
-
+<a href = "{{url_for('newSaleItem', user_id = user.id) }}">Create New Item</a>
 
 <div class = 'flash'>
 		      {% with messages = get_flashed_messages() %}
@@ -50,7 +50,8 @@
 
 	</div>
 
-
+ <a href="{{url_for('deleteItem', user_id = i.user_id, item_id=i.id)}}" >
+	Delete</a>
 
 
 		{% endfor %}

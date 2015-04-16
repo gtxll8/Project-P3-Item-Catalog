@@ -12,7 +12,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from database_setup import Users, Base, SaleItem, Category
+from database_setup import Users, UserDetails, Base, SaleItem, Category
 
 engine = create_engine('sqlite:///salesite.db')
 # Bind the engine to the metadata of the Base class so that the
@@ -32,19 +32,19 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
-@app.route('/', methods=['GET', 'POST'])
-def upload_file():
+@app.route('/forsale/<int:user_id>/<int:item_id>/upload/', methods=['GET', 'POST'])
+def upload_file(item_id, user_id):
     if request.method == 'POST':
         file = request.files['file']
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            editedItem = session.query(SaleItem).filter_by(id=2).one()
-            editedItem.image_name = file.filename
+            editedItem = session.query(SaleItem).filter_by(id=item_id).one()
+            editedItem.image_name = file.filename.replace(" ", "_")
             session.add(editedItem)
             session.commit()
             flash("New image added !")
-            return redirect(url_for('uploaded_file', filename=filename))
+            return redirect(url_for('uploaded_file', filename=filename, user_id=user_id))
     return '''
     <!doctype html>
     <title>Upload new File</title>
@@ -56,11 +56,11 @@ def upload_file():
     '''
 
 
-@app.route('/show/<filename>')
-def uploaded_file(filename):
+@app.route('/show/<filename>/<int:user_id>')
+def uploaded_file(filename, user_id):
     filename = url_for('static', filename=filename)
-    items = session.query(SaleItem).filter_by(user_id=1)
-    return render_template('template.html', filename=filename, items=items)
+    items = session.query(SaleItem).filter_by(user_id=user_id)
+    return render_template('adminpage.html', items=items)
 
 @app.route('/static/<filename>')
 def send_file(filename):
@@ -68,6 +68,34 @@ def send_file(filename):
 
 
 # testing stop
+
+@app.route('/')
+@app.route('/forsale/<user_id>/new/', methods=['GET', 'POST'])
+def newSaleItem(user_id):
+    user = session.query(Users).filter_by(id=user_id).first()
+    if request.method == 'POST':
+        newItem = SaleItem(name=request.form['name'], description=request.form['description'],
+                           price=request.form['price'], user_id=user_id)
+        session.add(newItem)
+        session.commit()
+        flash("New sale item created !")
+        return redirect(url_for('sellerPage', user_id=user_id))
+    else:
+        return render_template('newitem.html', user=user, user_id=user_id)
+
+@app.route('/forsale/<user_id>/<int:item_id>/delete/', methods=['GET', 'POST'])
+def deleteItem(user_id, item_id):
+    deletedItem = session.query(SaleItem).filter_by(id=item_id).one()
+    items = session.query(SaleItem).filter_by(user_id=user_id)
+    print item_id
+    if request.method == 'POST':
+        session.delete(deletedItem)
+        session.commit()
+        flash("Item deleted !")
+        return redirect(url_for('sellerPage', user_id=user_id))
+    else:
+        # USE THE RENDER_TEMPLATE FUNCTION BELOW TO SEE THE VARIABLES YOU SHOULD USE IN YOUR EDITMENUITEM TEMPLATE
+        return render_template('deleteitem.html', user_id=user_id, item_id=item_id, item=deletedItem)
 
 @app.route('/')
 @app.route('/forsale/<int:user_id>/')
