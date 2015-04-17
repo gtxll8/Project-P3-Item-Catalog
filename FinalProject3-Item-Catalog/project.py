@@ -1,22 +1,29 @@
+# We'll render HTML templates and access data sent by POST
+# using the request object from flask. Redirect and url_for
+# will be used to redirect the user once the CRUDs are done
+
 import os
 from werkzeug.utils import secure_filename
 from flask import Flask, render_template, url_for, request, redirect, flash, jsonify, request, redirect, url_for, \
     send_from_directory
 
-UPLOAD_FOLDER = './static'
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
-
-app = Flask(__name__)
-
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Users, UserDetails, Base, SaleItem, Category
 
+# Initialize the Flask application
+app = Flask(__name__)
+
+# This is the path to the upload directory
+UPLOAD_FOLDER = './static'
+# These are the extension that we are accepting to be uploaded
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 engine = create_engine('sqlite:///salesite.db')
 # Bind the engine to the metadata of the Base class so that the
-# declaratives can be accessed through a DBSession instance
+# declarative can be accessed through a DBSession instance
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 # A DBSession() instance establishes all conversations with the database
@@ -26,10 +33,28 @@ session = DBSession()
 
 # JSOn list only one item
 
-# testing start
+# For a given file, return whether it's an allowed type or not
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+
+# Route that will process the file upload
+@app.route('/upload', methods=['POST'])
+def upload():
+    # Get the name of the uploaded file
+    file = request.files['file']
+    # Check if the file is one of the allowed types/extensions
+    if file and allowed_file(file.filename):
+        # Make the filename safe, remove unsupported chars
+        filename = secure_filename(file.filename)
+        # Move the file form the temporal folder to
+        # the upload folder we setup
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        # Redirect the user to the uploaded_file route, which
+        # will basically show on the browser the uploaded file
+        return redirect(url_for('uploaded_file',
+                                filename=filename))
 
 
 @app.route('/forsale/<int:user_id>/<int:item_id>/upload/', methods=['GET', 'POST'])
@@ -37,6 +62,7 @@ def upload_file(item_id, user_id):
     if request.method == 'POST':
         file = request.files['file']
         if file and allowed_file(file.filename):
+            print item_id
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             editedItem = session.query(SaleItem).filter_by(id=item_id).one()
@@ -44,31 +70,15 @@ def upload_file(item_id, user_id):
             session.add(editedItem)
             session.commit()
             flash("New image added !")
-            return redirect(url_for('uploaded_file', filename=filename, user_id=user_id))
-    return '''
-    <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form action="" method=post enctype=multipart/form-data>
-      <p><input type=file name=file>
-         <input type=submit value=Upload>
-    </form>
-    '''
+            return redirect(url_for('sellerPage', user_id=user_id))
 
-
-@app.route('/show/<filename>/<int:user_id>')
-def uploaded_file(filename, user_id):
-    filename = url_for('static', filename=filename)
-    items = session.query(SaleItem).filter_by(user_id=user_id)
-    return render_template('adminpage.html', items=items)
 
 @app.route('/static/<filename>')
 def send_file(filename):
     return send_from_directory(UPLOAD_FOLDER, filename)
 
 
-# testing stop
-
+# Add new items
 @app.route('/')
 @app.route('/forsale/<user_id>/new/', methods=['GET', 'POST'])
 def newSaleItem(user_id):
@@ -79,16 +89,31 @@ def newSaleItem(user_id):
         session.add(newItem)
         session.commit()
         flash("New sale item created !")
+        item = session.query(SaleItem).order_by(SaleItem.id.desc()).first()
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            editedItem = session.query(SaleItem).filter_by(id=item.id).one()
+            editedItem.image_name = file.filename.replace(" ", "_")
+            session.add(editedItem)
+            session.commit()
+            flash("New image added !")
         return redirect(url_for('sellerPage', user_id=user_id))
     else:
         return render_template('newitem.html', user=user, user_id=user_id)
 
+
+# Delete items
 @app.route('/forsale/<user_id>/<int:item_id>/delete/', methods=['GET', 'POST'])
 def deleteItem(user_id, item_id):
     deletedItem = session.query(SaleItem).filter_by(id=item_id).one()
-    items = session.query(SaleItem).filter_by(user_id=user_id)
+    item = session.query(SaleItem).filter_by(id=item_id).one()
     print item_id
     if request.method == 'POST':
+        # delete the file from the upload folder
+        if item.image_name and os.path.isfile(os.path.join(app.config['UPLOAD_FOLDER'], item.image_name)):
+            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], item.image_name))
         session.delete(deletedItem)
         session.commit()
         flash("Item deleted !")
@@ -97,11 +122,13 @@ def deleteItem(user_id, item_id):
         # USE THE RENDER_TEMPLATE FUNCTION BELOW TO SEE THE VARIABLES YOU SHOULD USE IN YOUR EDITMENUITEM TEMPLATE
         return render_template('deleteitem.html', user_id=user_id, item_id=item_id, item=deletedItem)
 
+
+# Main seller's page
 @app.route('/')
 @app.route('/forsale/<int:user_id>/')
 def sellerPage(user_id):
     user = session.query(Users).filter_by(id=user_id).first()
-    items = session.query(SaleItem).filter_by(user_id=user.id)
+    items = session.query(SaleItem).filter_by(user_id=user_id)
     return render_template('seller_page.html', user=user, items=items)
 
 
