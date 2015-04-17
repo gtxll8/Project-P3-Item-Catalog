@@ -1,0 +1,38 @@
+<html>
+<head>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+	</head>
+	<body>
+
+<h1> Edit Item </h1>
+
+<form action="{{url_for('editItem', user_id=user_id, item_id=item.id )}}" method = 'POST' enctype=multipart/form-data>
+
+<p>Upload image:</p>
+
+    <p><input type=file name=file>
+
+
+<dl>
+	<dt>Name:</dt>
+		<dd><input type ='text' size='30' name='name' placeholder = '{{item.name }}'></dd>
+	<dt>Description:</dt>
+		<dd><textarea name = 'description' rows='5' cols='40' placeholder = '{{item.description }}'></textarea></dd>
+	<dt>Price:</dt>
+		<dd><input type = 'text' size = '8' name='price' placeholder = '{{item.price}}'></dd>
+
+
+
+<input type='submit' value='Save'>
+    <a href= "{{url_for('sellerPage', user_id=user_id)}}">Cancel</a>
+
+
+
+
+</dl>
+
+
+
+</form>
+</body>
+</html>

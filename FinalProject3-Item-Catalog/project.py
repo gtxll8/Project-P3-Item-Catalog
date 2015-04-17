@@ -104,6 +104,38 @@ def newSaleItem(user_id):
         return render_template('newitem.html', user=user, user_id=user_id)
 
 
+# Edit items
+@app.route('/')
+@app.route('/forsale/<int:user_id>/<int:item_id>/edit/', methods=['GET', 'POST'])
+def editItem(user_id, item_id):
+    user = session.query(Users).filter_by(id=user_id).first()
+    editeditem = session.query(SaleItem).filter_by(id=item_id).one()
+    if request.method == 'POST':
+        if request.form['name']:
+            editeditem.name = request.form['name']
+        if request.form['description']:
+            editeditem.description = request.form['description']
+        if request.form['price']:
+            editeditem.price = request.form['price']
+        session.add(editeditem)
+        session.commit()
+        flash("Change saved !")
+        product_file = request.files['file']
+        if product_file and allowed_file(product_file.filename):
+            # Remove first the old file from folder
+            if editeditem.image_name and os.path.isfile(os.path.join(app.config['UPLOAD_FOLDER'], editeditem.image_name)):
+                os.remove(os.path.join(app.config['UPLOAD_FOLDER'], editeditem.image_name))
+            filename = secure_filename(product_file.filename)
+            product_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            editeditem.image_name = product_file.filename.replace(" ", "_")
+            session.add(editeditem)
+            session.commit()
+            flash("New image added !")
+        return redirect(url_for('sellerPage', user_id=user_id))
+    else:
+        return render_template('edititem.html', user=user, user_id=user_id, item=editeditem)
+
+
 # Delete items
 @app.route('/forsale/<user_id>/<int:item_id>/delete/', methods=['GET', 'POST'])
 def deleteItem(user_id, item_id):
@@ -111,7 +143,7 @@ def deleteItem(user_id, item_id):
     item = session.query(SaleItem).filter_by(id=item_id).one()
     print item_id
     if request.method == 'POST':
-        # delete the file from the upload folder
+        # delete the file from the upload folder too
         if item.image_name and os.path.isfile(os.path.join(app.config['UPLOAD_FOLDER'], item.image_name)):
             os.remove(os.path.join(app.config['UPLOAD_FOLDER'], item.image_name))
         session.delete(deletedItem)

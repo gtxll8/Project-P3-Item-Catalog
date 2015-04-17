@@ -56,6 +56,7 @@
 
  <a href="{{url_for('deleteItem', user_id = i.user_id, item_id=i.id)}}" >
 	Delete</a>
+        <a href="{{url_for('editItem',user_id = i.user_id, item_id=i.id)}}" >Edit</a>
 
 
 		{% endfor %}
