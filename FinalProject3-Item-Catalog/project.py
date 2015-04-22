@@ -56,7 +56,7 @@ def upload():
         return redirect(url_for('uploaded_file',
                                 filename=filename))
 
-
+# Add new image to product
 @app.route('/forsale/<int:user_id>/<int:item_id>/upload/', methods=['GET', 'POST'])
 def upload_file(item_id, user_id):
     if request.method == 'POST':

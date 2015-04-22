@@ -1,6 +1,7 @@
 # config.py
 
 from authomatic.providers import oauth2, oauth1
+import authomatic
 
 CONFIG = {
 
@@ -26,5 +27,19 @@ CONFIG = {
         'scope': ['user_about_me', 'email', 'publish_stream'],
     },
 
-
+    'google': {
+        'class_': oauth2.Google,
+        'consumer_key': '720789354184-aokdhm5b8m2bjk6vtsb1aal83p1u0pgv.apps.googleusercontent.com',
+        'consumer_secret': 'dW3onhfvmsEIKXWq668OJdK1',
+        'id': authomatic.provider_id(),
+        'scope': oauth2.Google.user_info_scope + [
+            'https://www.googleapis.com/auth/calendar',
+            'https://mail.google.com/mail/feed/atom',
+            'https://www.googleapis.com/auth/drive',
+            'https://gdata.youtube.com'],
+        '_apis': {
+            'List your calendars': ('GET', 'https://www.googleapis.com/calendar/v3/users/me/calendarList'),
+            'List your YouTube playlists': ('GET', 'https://gdata.youtube.com/feeds/api/users/default/playlists?alt=json'),
+            },
+    },
 }
