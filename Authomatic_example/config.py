@@ -1,6 +1,6 @@
 # config.py
 
-from authomatic.providers import oauth2, oauth1, openid
+from authomatic.providers import oauth2, oauth1
 
 CONFIG = {
 
@@ -10,8 +10,8 @@ CONFIG = {
         'class_': oauth1.Twitter,
 
         # Twitter is an AuthorizationProvider so we need to set several other properties too:
-        'consumer_key': '########################',
-        'consumer_secret': '########################',
+        'consumer_key': 'wM0LNsBC6W0VOwIEaZuMxsP5d',
+        'consumer_secret': 'aXtrzZHC3kbQKHsm0EX9DnvIOJeg8ZugU8o1IP2txDjnM6YG2K',
     },
 
     'fb': {
@@ -26,9 +26,5 @@ CONFIG = {
         'scope': ['user_about_me', 'email', 'publish_stream'],
     },
 
-    'oi': {
 
-        # OpenID provider dependent on the python-openid package.
-        'class_': openid.OpenID,
-    }
 }
