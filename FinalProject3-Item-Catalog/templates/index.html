@@ -1,0 +1,68 @@
+<<html xmlns="http://www.w3.org/1999/html">
+<head>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+	</head>
+
+
+	<body>
+	<div class = 'pane'>
+		<div class = 'header'>
+		<h1>User name to put here</h1>
+	</div>
+
+<div class = 'flash'>
+		      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+
+        <ul>
+        {% for message in messages %}
+            <li> <strong> {{ message }} </strong> </li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+
+</div>
+
+
+		{% for i in items %}
+    <div class = 'nameAndPrice'>
+		<span class = 'name'><p>{{i.name}}</p></span>
+            {% if i.image_name %}
+        </br>
+            <span class = 'image'><img src="{{url_for('static' , filename=i.image_name)}}" width=260></p></span>
+
+             {% endif %}
+		<span class = 'price'>
+
+
+		<p>{{i.price}} </p>
+	</span>
+	</div>
+
+
+
+	<div class = 'description'>
+		<p>{{i.description}}</p>
+	</div>
+
+
+
+	<div class = "editdeletepane">
+
+	</div>
+
+
+		{% endfor %}
+
+
+
+
+</div>
+</div>
+	</body>
+
+
+
+
+</html>

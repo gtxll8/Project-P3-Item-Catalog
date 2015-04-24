@@ -39,6 +39,13 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
+# Home route
+@app.route('/')
+def index():
+    items = session.query(SaleItem).all()
+    return render_template('index.html', items=items)
+
+
 # Route that will process the file upload
 @app.route('/upload', methods=['POST'])
 def upload():
@@ -55,6 +62,7 @@ def upload():
         # will basically show on the browser the uploaded file
         return redirect(url_for('uploaded_file',
                                 filename=filename))
+
 
 # Add new image to product
 @app.route('/forsale/<int:user_id>/<int:item_id>/upload/', methods=['GET', 'POST'])
