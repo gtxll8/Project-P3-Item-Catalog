@@ -42,6 +42,11 @@ def login(provider_name):
             # We need to update the user to get more info.
             result.user.update()
 
+            # Welcome the user.
+        print(result.user.name)
+        print(result.user.id)
+        print(result.user.email)
+
         # The rest happens inside the template.
         return render_template('login.html', result=result)
 
