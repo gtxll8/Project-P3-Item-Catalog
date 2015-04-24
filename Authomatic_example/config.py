@@ -1,6 +1,6 @@
 # config.py
 
-from authomatic.providers import oauth2, oauth1
+from authomatic.providers import oauth2, oauth1, openid
 import authomatic
 
 CONFIG = {
@@ -33,6 +33,7 @@ CONFIG = {
         'consumer_secret': 'dW3onhfvmsEIKXWq668OJdK1',
         'id': authomatic.provider_id(),
         'scope': oauth2.Google.user_info_scope + [
+            'email',
             'https://www.googleapis.com/auth/calendar',
             'https://mail.google.com/mail/feed/atom',
             'https://www.googleapis.com/auth/drive',
@@ -41,5 +42,11 @@ CONFIG = {
             'List your calendars': ('GET', 'https://www.googleapis.com/calendar/v3/users/me/calendarList'),
             'List your YouTube playlists': ('GET', 'https://gdata.youtube.com/feeds/api/users/default/playlists?alt=json'),
             },
+    },
+
+    'oi': {
+
+        # OpenID provider dependent on the python-openid package.
+        'class_': openid.OpenID,
     },
 }
