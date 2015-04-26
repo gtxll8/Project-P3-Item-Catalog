@@ -5,14 +5,19 @@
 import os
 from werkzeug.utils import secure_filename
 from flask import Flask, render_template, url_for, request, redirect, flash, jsonify, request, redirect, url_for, \
-    send_from_directory
-
+    send_from_directory, make_response
+from config import CONFIG
+from authomatic.adapters import WerkzeugAdapter
+from authomatic import Authomatic
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Users, UserDetails, Base, SaleItem, Category
 
 # Initialize the Flask application
 app = Flask(__name__)
+
+# Instantiate Authomatic.
+authomatic = Authomatic(CONFIG, 'your secret string', report_errors=False)
 
 # This is the path to the upload directory
 UPLOAD_FOLDER = './static'
@@ -44,6 +49,34 @@ def allowed_file(filename):
 def index():
     items = session.query(SaleItem).all()
     return render_template('index.html', items=items)
+
+
+@app.route('/login/<provider_name>/', methods=['GET', 'POST'])
+def login(provider_name):
+    """
+    Login handler, must accept both GET and POST to be able to use OpenID.
+    """
+
+    # We need response object for the WerkzeugAdapter.
+    response = make_response()
+
+    # Log the user in, pass it the adapter and the provider name.
+    result = authomatic.login(WerkzeugAdapter(request, response), provider_name)
+
+    # If there is no LoginResult object, the login procedure is still pending.
+    if result:
+        if result.user:
+            print 'logged in'
+            # We need to update the user to get more info.
+            result.user.update()
+
+        print result.user.name
+        # The rest happens inside the template.
+        return render_template('login.html', result=result, email=result.user.email)
+
+
+    # Don't forget to return the response.
+    return response
 
 
 # Route that will process the file upload
@@ -175,4 +208,4 @@ def sellerPage(user_id):
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
     app.debug = True
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=8080)
