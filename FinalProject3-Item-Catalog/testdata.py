@@ -18,21 +18,11 @@ session = DBSession()
 # Menu for UrbanBurger
 
 
-user1 = Users(name="George Smith")
+user1 = Users(name="George Smith", social_id="23786543")
 session.add(user1)
 session.commit()
 
 category1 = Category(name="Electronics", description="Electronic items, PCs HiFis etc")
 session.add(category1)
-session.commit()
-
-item1 = SaleItem(name="Laptop", description="Intel i5 HP Laptop in good condition for sale", price="$100",
-                 category_id=1, user_id=1, user=user1)
-session.add(item1)
-session.commit()
-
-item2 = SaleItem(name="Tablet", description="Amazon reader HDX in good condition for sale", price="$90",
-                 category_id=1, user_id=1, user=user1)
-session.add(item2)
 session.commit()
 

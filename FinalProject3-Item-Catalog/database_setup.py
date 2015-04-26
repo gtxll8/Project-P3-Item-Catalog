@@ -14,15 +14,7 @@ class Users(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
-
-
-class UserDetails(Base):
-    __tablename__ = 'user_details'
-
-    id = Column(Integer, primary_key=True)
-    handle = Column(String(80), nullable=False)
-    email = Column(String(250), primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'))
+    social_id = Column(String(64), nullable=False, unique=True)
 
 
 class SaleItem(Base):

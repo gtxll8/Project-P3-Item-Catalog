@@ -6,12 +6,13 @@ import os
 from werkzeug.utils import secure_filename
 from flask import Flask, render_template, url_for, request, redirect, flash, jsonify, request, redirect, url_for, \
     send_from_directory, make_response
+
 from config import CONFIG
 from authomatic.adapters import WerkzeugAdapter
 from authomatic import Authomatic
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from database_setup import Users, UserDetails, Base, SaleItem, Category
+from database_setup import Users, Base, SaleItem, Category
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -69,6 +70,15 @@ def login(provider_name):
             print 'user updated'
             # We need to update the user to get more info.
             result.user.update()
+            # Check if this user is already in db
+            user = session.query(Users).filter_by(social_id=result.user.id).first()
+            if user:
+                print "already registered"
+            else:
+                new_user = Users(social_id=result.user.id, name=result.user.name)
+                session.add(new_user)
+                session.commit()
+                flash("New sale item created !")
 
         print result.user.name
         # The rest happens inside the template.
@@ -162,7 +172,7 @@ def editItem(user_id, item_id):
         flash("Change saved !")
         product_file = request.files['file']
         if product_file and allowed_file(product_file.filename):
-            # Remove first the old file from folder
+            # Remove the old file from folder
             if editeditem.image_name and os.path.isfile(os.path.join(app.config['UPLOAD_FOLDER'], editeditem.image_name)):
                 os.remove(os.path.join(app.config['UPLOAD_FOLDER'], editeditem.image_name))
             filename = secure_filename(product_file.filename)
