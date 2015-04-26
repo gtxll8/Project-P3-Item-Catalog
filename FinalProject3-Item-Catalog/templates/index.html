@@ -1,6 +1,12 @@
 {# index.html #}
 {% extends "base.html" %}
 {% block body %}
+
+    <!--Links to the login handler-->
+    Login with <a href="login/tw">Twitter</a>.<br />
+    Login with <a href="login/google">Google</a>.<br />
+    Login with <a href="login/github">Github</a>.<br />
+
 <html xmlns="http://www.w3.org/1999/html">
 <head>
 	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
@@ -11,7 +17,6 @@
 	<div class = 'pane'>
 		<div class = 'header'>
 		<h1>User name to put here</h1>
-         Login with<a href="login/google">Google</a>.<br />
 
         </div>
 
