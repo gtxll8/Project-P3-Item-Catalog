@@ -17,7 +17,7 @@ from database_setup import Users, UserDetails, Base, SaleItem, Category
 app = Flask(__name__)
 
 # Instantiate Authomatic.
-authomatic = Authomatic(CONFIG, 'your secret string', report_errors=False)
+authomatic = Authomatic(CONFIG, 'development', report_errors=False)
 
 # This is the path to the upload directory
 UPLOAD_FOLDER = './static'
@@ -66,14 +66,13 @@ def login(provider_name):
     # If there is no LoginResult object, the login procedure is still pending.
     if result:
         if result.user:
-            print 'logged in'
+            print 'user updated'
             # We need to update the user to get more info.
             result.user.update()
 
         print result.user.name
         # The rest happens inside the template.
         return render_template('login.html', result=result, email=result.user.email)
-
 
     # Don't forget to return the response.
     return response
