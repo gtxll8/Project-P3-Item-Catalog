@@ -13,6 +13,7 @@ from authomatic import Authomatic
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Users, Base, SaleItem, Category
+from flask.ext.login import AnonymousUserMixin
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -38,6 +39,13 @@ session = DBSession()
 # JSON list all items
 
 # JSOn list only one item
+
+
+# User class
+class Anonymous(AnonymousUserMixin):
+    def __init__(self):
+        self.username = 'Guest'
+
 
 # For a given file, return whether it's an allowed type or not
 def allowed_file(filename):
@@ -78,7 +86,7 @@ def login(provider_name):
                 new_user = Users(social_id=result.user.id, name=result.user.name)
                 session.add(new_user)
                 session.commit()
-                flash("New sale item created !")
+                flash("New user account added !")
 
         print result.user.name
         # The rest happens inside the template.
@@ -173,7 +181,8 @@ def editItem(user_id, item_id):
         product_file = request.files['file']
         if product_file and allowed_file(product_file.filename):
             # Remove the old file from folder
-            if editeditem.image_name and os.path.isfile(os.path.join(app.config['UPLOAD_FOLDER'], editeditem.image_name)):
+            if editeditem.image_name and os.path.isfile(
+                    os.path.join(app.config['UPLOAD_FOLDER'], editeditem.image_name)):
                 os.remove(os.path.join(app.config['UPLOAD_FOLDER'], editeditem.image_name))
             filename = secure_filename(product_file.filename)
             product_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
