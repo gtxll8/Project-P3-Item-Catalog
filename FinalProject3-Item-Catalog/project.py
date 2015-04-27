@@ -13,7 +13,8 @@ from authomatic import Authomatic
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Users, Base, SaleItem, Category
-from flask.ext.login import AnonymousUserMixin
+from flask.ext.login import AnonymousUserMixin, LoginManager, UserMixin, login_user, logout_user, \
+    current_user
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -39,6 +40,42 @@ session = DBSession()
 # JSON list all items
 
 # JSOn list only one item
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+
+class UserNotFoundError(Exception):
+    pass
+
+
+# Load users
+class User(UserMixin):
+    def __init__(self, id, name, social_id, active=True):
+        self.id = id
+        self.name = name
+        self.social_id = social_id
+        self.active = active
+
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def is_authenticated(self):
+        return True
+
+
+@login_manager.user_loader
+def load_user(id):
+    # 1. Fetch against the database a user by `id`
+    # 2. Create a new object of `User` class and return it.
+    u = session.query(Users).filter_by(id=id).first()
+    return u.id
 
 
 # User class
@@ -80,8 +117,13 @@ def login(provider_name):
             result.user.update()
             # Check if this user is already in db
             user = session.query(Users).filter_by(social_id=result.user.id).first()
+            u = User(user.id, user.name, user.social_id)
             if user:
+                login_user(u)
+                print user.name
+                flash("Logged in!")
                 print "already registered"
+
             else:
                 new_user = Users(social_id=result.user.id, name=result.user.name)
                 session.add(new_user)
