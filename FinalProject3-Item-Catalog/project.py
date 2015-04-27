@@ -120,7 +120,7 @@ def login(provider_name):
             u = User(user.id, user.name, user.social_id)
             if user:
                 login_user(u)
-                print user.name
+                print current_user.name
                 flash("Logged in!")
                 print "already registered"
 
