@@ -5,7 +5,7 @@
 import os
 from werkzeug.utils import secure_filename
 from flask import Flask, render_template, url_for, request, redirect, flash, jsonify, request, redirect, url_for, \
-    send_from_directory, make_response
+    send_from_directory, make_response, g
 
 from config import CONFIG
 from authomatic.adapters import WerkzeugAdapter
@@ -14,7 +14,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Users, Base, SaleItem, Category
 from flask.ext.login import AnonymousUserMixin, LoginManager, UserMixin, login_user, logout_user, \
-    current_user
+    current_user, login_required
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -43,6 +43,7 @@ session = DBSession()
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+login_manager.login_view = 'login'
 
 
 class UserNotFoundError(Exception):
@@ -66,16 +67,12 @@ class User(UserMixin):
     def is_anonymous(self):
         return False
 
-    def is_authenticated(self):
-        return True
-
-
 @login_manager.user_loader
 def load_user(id):
     # 1. Fetch against the database a user by `id`
     # 2. Create a new object of `User` class and return it.
     u = session.query(Users).filter_by(id=id).first()
-    return u.id
+    return u
 
 
 # User class
@@ -121,6 +118,7 @@ def login(provider_name):
             if user:
                 login_user(u)
                 print current_user.name
+                print current_user.id
                 flash("Logged in!")
                 print "already registered"
 
@@ -137,6 +135,9 @@ def login(provider_name):
     # Don't forget to return the response.
     return response
 
+@app.before_request
+def before_request():
+    g.user = current_user
 
 # Route that will process the file upload
 @app.route('/upload', methods=['POST'])
@@ -259,6 +260,7 @@ def deleteItem(user_id, item_id):
 # Main seller's page
 @app.route('/')
 @app.route('/forsale/<int:user_id>/')
+#@login_required
 def sellerPage(user_id):
     user = session.query(Users).filter_by(id=user_id).first()
     items = session.query(SaleItem).filter_by(user_id=user_id)
