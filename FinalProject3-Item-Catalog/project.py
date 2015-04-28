@@ -65,11 +65,11 @@ class User(UserMixin):
 
     def is_active(self):
         return True
-        # return true if user is activte and authenticated
+        # return true if user is active and authenticated
 
     def is_annonymous(self):
         return False
-        # return true if annon, actual user return false
+        # return true if Annonymous, actual user return false
 
     def get_id(self):
         try:
@@ -81,7 +81,7 @@ class User(UserMixin):
 class Anonymous(AnonymousUserMixin):
     def __init__(self):
         self.name = 'Guest'
-        self.social_id = 1
+        self.social_id = 0
 
 
 login_manager.anonymous_user = Anonymous
@@ -171,6 +171,7 @@ def before_request():
 
 # Route that will process the file upload
 @app.route('/upload', methods=['POST'])
+@login_required
 def upload():
     # Get the name of the uploaded file
     file = request.files['file']
@@ -189,6 +190,7 @@ def upload():
 
 # Add new image to product
 @app.route('/forsale/<int:user_id>/<int:item_id>/upload/', methods=['GET', 'POST'])
+@login_required
 def upload_file(item_id, user_id):
     if request.method == 'POST':
         file = request.files['file']
@@ -212,6 +214,7 @@ def send_file(filename):
 # Add new items
 @app.route('/')
 @app.route('/forsale/<user_id>/new/', methods=['GET', 'POST'])
+@login_required
 def newSaleItem(user_id):
     user = session.query(Users).filter_by(id=user_id).first()
     if request.method == 'POST':
@@ -238,6 +241,7 @@ def newSaleItem(user_id):
 # Edit items
 @app.route('/')
 @app.route('/forsale/<int:user_id>/<int:item_id>/edit/', methods=['GET', 'POST'])
+@login_required
 def editItem(user_id, item_id):
     user = session.query(Users).filter_by(id=user_id).first()
     editeditem = session.query(SaleItem).filter_by(id=item_id).one()
@@ -270,6 +274,7 @@ def editItem(user_id, item_id):
 
 # Delete items
 @app.route('/forsale/<user_id>/<int:item_id>/delete/', methods=['GET', 'POST'])
+@login_required
 def deleteItem(user_id, item_id):
     deletedItem = session.query(SaleItem).filter_by(id=item_id).one()
     item = session.query(SaleItem).filter_by(id=item_id).one()
@@ -289,11 +294,11 @@ def deleteItem(user_id, item_id):
 
 # Main seller's page
 @app.route('/')
-@app.route('/forsale/<int:user_id>/')
+@app.route('/admin/')
 @login_required
-def sellerPage(user_id):
-    user = session.query(Users).filter_by(id=user_id).first()
-    items = session.query(SaleItem).filter_by(user_id=user_id)
+def sellerPage():
+    user = session.query(Users).filter_by(id=g.user.id).first()
+    items = session.query(SaleItem).filter_by(user_id=g.user.id)
     return render_template('seller_page.html', user=user, items=items)
 
 
