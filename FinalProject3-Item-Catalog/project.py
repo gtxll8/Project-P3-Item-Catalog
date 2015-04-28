@@ -15,6 +15,7 @@ from sqlalchemy.orm import sessionmaker
 from database_setup import Users, Base, SaleItem, Category
 from flask.ext.login import AnonymousUserMixin, LoginManager, UserMixin, login_user, logout_user, \
     current_user, login_required
+import sqlite3
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -60,25 +61,38 @@ class User(UserMixin):
 
     def is_authenticated(self):
         return True
+        # return true if user is authenticated, provided credentials
 
     def is_active(self):
         return True
+        # return true if user is activte and authenticated
 
-    def is_anonymous(self):
+    def is_annonymous(self):
         return False
+        # return true if annon, actual user return false
+
+    def get_id(self):
+        try:
+            return unicode(self.id)  # python 2
+        except NameError:
+            return str(self.id)  # python 3
+
+
+class Anonymous(AnonymousUserMixin):
+    def __init__(self):
+        self.name = 'Guest'
+        self.social_id = 1
+
+
+login_manager.anonymous_user = Anonymous
+
 
 @login_manager.user_loader
 def load_user(id):
     # 1. Fetch against the database a user by `id`
     # 2. Create a new object of `User` class and return it.
     u = session.query(Users).filter_by(id=id).first()
-    return u
-
-
-# User class
-class Anonymous(AnonymousUserMixin):
-    def __init__(self):
-        self.username = 'Guest'
+    return User(u.id, u.name, u.social_id)
 
 
 # For a given file, return whether it's an allowed type or not
@@ -117,6 +131,8 @@ def login(provider_name):
             u = User(user.id, user.name, user.social_id)
             if user:
                 login_user(u)
+                if current_user.is_authenticated():
+                    flash('You are already logged in.')
                 print current_user.name
                 print current_user.id
                 flash("Logged in!")
@@ -135,9 +151,23 @@ def login(provider_name):
     # Don't forget to return the response.
     return response
 
+
+@app.route('/logout')
+@login_required
+def logout():
+    user = g.user
+    logout_user()
+    print user.name, user.social_id
+    print "logged out!"
+    flash("You are now logged out!")
+    items = session.query(SaleItem).all()
+    return render_template('index.html', items=items)
+
+
 @app.before_request
 def before_request():
     g.user = current_user
+
 
 # Route that will process the file upload
 @app.route('/upload', methods=['POST'])
@@ -260,11 +290,19 @@ def deleteItem(user_id, item_id):
 # Main seller's page
 @app.route('/')
 @app.route('/forsale/<int:user_id>/')
-#@login_required
+@login_required
 def sellerPage(user_id):
     user = session.query(Users).filter_by(id=user_id).first()
     items = session.query(SaleItem).filter_by(user_id=user_id)
     return render_template('seller_page.html', user=user, items=items)
+
+
+@login_manager.unauthorized_handler
+def unauthorized():
+    # do stuff
+    items = session.query(SaleItem).all()
+    flash("Hello Guest, you need to login!")
+    return render_template('index.html', items=items)
 
 
 if __name__ == '__main__':
