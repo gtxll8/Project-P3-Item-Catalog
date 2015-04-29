@@ -22,7 +22,6 @@ app = Flask(__name__)
 
 # Instantiate Authomatic.
 authomatic = Authomatic(CONFIG, 'development', report_errors=False)
-
 # This is the path to the upload directory
 UPLOAD_FOLDER = './static'
 # These are the extension that we are accepting to be uploaded
@@ -42,9 +41,16 @@ session = DBSession()
 
 # JSOn list only one item
 
+
+class Anonymous(AnonymousUserMixin):
+    def __init__(self):
+        self.name = 'Guest'
+        self.social_id = 0
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+login_manager.anonymous_user = Anonymous
 
 
 class UserNotFoundError(Exception):
@@ -78,15 +84,6 @@ class User(UserMixin):
             return str(self.id)  # python 3
 
 
-class Anonymous(AnonymousUserMixin):
-    def __init__(self):
-        self.name = 'Guest'
-        self.social_id = 0
-
-
-login_manager.anonymous_user = Anonymous
-
-
 @login_manager.user_loader
 def load_user(id):
     # 1. Fetch against the database a user by `id`
@@ -101,18 +98,20 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
+# Test
+@app.route('/login_test')
+def login_test():
+    return render_template('login_test.html')
+
 # Home route
 @app.route('/')
 def index():
     items = session.query(SaleItem).all()
     return render_template('index.html', items=items)
 
-
+# Login handler, must accept both GET and POST to be able to use OpenID.
 @app.route('/login/<provider_name>/', methods=['GET', 'POST'])
 def login(provider_name):
-    """
-    Login handler, must accept both GET and POST to be able to use OpenID.
-    """
 
     # We need response object for the WerkzeugAdapter.
     response = make_response()
