@@ -23,6 +23,7 @@ CONFIG = {
         'consumer_key': '2cb3423c3307604727e0',
         'consumer_secret': 'efe045296c5e8763a9ab0cc6eac36a7718ca6f77',
         'access_headers': {'User-Agent': 'Awesome-Octocat-App'},
+        'scope': ['id', 'email', 'name'],
     },
 
     'fb': {

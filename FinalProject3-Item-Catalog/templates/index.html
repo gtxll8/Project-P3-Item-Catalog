@@ -10,19 +10,38 @@
 
 <html xmlns="http://www.w3.org/1999/html">
 <head>
-	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='app.css') }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='normalize.css') }}">
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
+    <style>
+  body {padding-top: 50px;}
+  </style>
+     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
 	</head>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Bootstrap <3</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="active"><a href="#">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div>
+  </div>
 
-
-
-	<div class = 'pane'>
-		<div class = 'header'>
-		<h1>MICROSALEMARKET</h1>
-
-        </div>
+  <div class="jumbotron">
+    <div class="container">
+      <h1>MICROSALEMARKET</h1>
+      <p class="lead">Bacon ipsum dolor sit amet tenderloin chuck jowl, drumstick pork loin kevin andouille tri-tip. Turkey biltong sirloin, tongue rump pork belly t-bone tail sausage venison corned beef. Jerky pig shoulder beef, tri-tip turducken kevin ribeye prosciutto spare ribs.</p>
+      <a class="btn btn-primary btn-lg btn-block">Big ASS Learn more button</a>
+    </div>
+  </div>
 
 <div class = 'flash'>
 		      {% with messages = get_flashed_messages() %}
@@ -40,7 +59,7 @@
 
 
 		{% for i in items %}
-    <div class = 'nameAndPrice'>
+    <div class = 'container'>
 		<span class = 'name'><p>{{i.name}}</p></span>
             {% if i.image_name %}
         </br>
