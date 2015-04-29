@@ -1,44 +1,44 @@
 
  {% block head %}
       <title>Login Popup Example</title>
-       <link rel=stylesheet type=text/css href="{{ url_for('static', filename='app.css') }}">
+ >
        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='normalize.css') }}">
        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='signin.css') }}">
+ <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
+ <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
       <!-- authomatic.js is dependent on jQuery -->
        <script type="text/javascript" src="{{ url_for('static', filename='jquery-1.9.1.min.js') }}"></script>
        <script type="text/javascript" src="{{ url_for('static' , filename='authomatic.js') }}"></script>
   {% endblock %}
    <body>
+
 <div class="container">
 
-         <form class="form-signin authomatic" action="/login" method="post" role="form">
-             <h3 class="form-signin-heading">Please Sign in with :</h3>
-                   <!-- Opens a popup with location = "login/<social id>" -->
-                <div class="small-10 columns">
 
-	<ul class="small-block-grid-1 large-block-grid-3">
+    <div class="omb_login">
+        <h2 class="omb_authTitle">Login </h2>
 
-		<li>
-			<a href="/login/github" class="authomatic provider-button github">
-				<span>Github</span> <img src="/static/img/icons/github.ico">
-			</a>
-		</li>
+        <div class="row omb_row-sm-offset-3 omb_socialButtons">
+            <div class="col-xs-4 col-sm-2">
+                <a href="/login/github" class="authomatic btn btn-lg btn-block omb_btn-facebook">
+                    <i class="fa fa-facebook visible-xs"></i>
+                    <span class="hidden-xs">Github</span>
+                </a>
+            </div>
+            <div class="col-xs-4 col-sm-2">
+                <a href="/login/tw" class="authomatic btn btn-lg btn-block omb_btn-twitter">
+                    <i class="fa fa-twitter visible-xs"></i>
+                    <span class="hidden-xs">Twitter</span>
+                </a>
+            </div>
+            <div class="col-xs-4 col-sm-2">
+                <a href="/login/google" class="authomatic btn btn-lg btn-block omb_btn-google">
+                    <i class="fa fa-google-plus visible-xs"></i>
+                    <span class="hidden-xs">Google+</span>
+                </a>
+            </div>
+        </div>
 
-
-		<li>
-			<a href="/login/google" class="authomatic provider-button google">
-				<span>Google</span> <img src="/static/img/icons/google.ico">
-			</a>
-		</li>
-
-        <li>
-			<a href="/login/tw" class="authomatic provider-button google">
-				<span>Twitter</span> <img src="/static/img/icons/twitter.ico">
-			</a>
-		</li>
-
-    </ul>
-    </div>
 
 
       <script type="text/javascript">

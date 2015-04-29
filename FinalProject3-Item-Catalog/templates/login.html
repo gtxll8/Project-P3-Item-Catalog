@@ -7,13 +7,7 @@
        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
 
 
-  <div class="jumbotron">
-    <div class="container">
-      <h1>Bootstrap starter template</h1>
-      <p class="lead">Bacon ipsum dolor sit amet tenderloin chuck jowl, drumstick pork loin kevin andouille tri-tip. Turkey biltong sirloin, tongue rump pork belly t-bone tail sausage venison corned beef. Jerky pig shoulder beef, tri-tip turducken kevin ribeye prosciutto spare ribs.</p>
-      <a class="btn btn-primary btn-lg btn-block">Big ASS Learn more button</a>
-    </div>
-  </div>
+
 
     {# Check for errors. #}
     {% if result.error %}
@@ -27,6 +21,18 @@
         <h2>Your email is: {{ result.user.email }}</h2>
         <h2>Your email: {{result.user.username}}</h2> -->
     {% endif %}
+</div>
+
+<div class="jumbotron">
+    <div class="container">
+        <h1>Bootstrap starter template</h1>
+
+        <p class="lead">Bacon ipsum dolor sit amet tenderloin chuck jowl, drumstick pork loin kevin andouille tri-tip.
+            Turkey biltong sirloin, tongue rump pork belly t-bone tail sausage venison corned beef. Jerky pig shoulder
+            beef, tri-tip turducken kevin ribeye prosciutto spare ribs.</p>
+        <a class="btn btn-primary btn-lg btn-block" onclick="opener.location.href ='/admin'; window.close();">Go to your
+            admin page</a>
+    </div>
 </div>
     {# If the user has credentials, we can access his/her protected resources. #}
     {% if result.user.credentials %}
@@ -85,7 +91,5 @@
             
         {% endif %}{# result.provider.name == 'tw' #}
     {% endif %}{# result.user.credentials #}
-
-<input type="button" onclick="opener.location.href ='/admin'; window.close();" text="Hello go to main website"/>
 
 {% endblock body %}

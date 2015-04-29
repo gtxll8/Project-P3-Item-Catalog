@@ -8083,13 +8083,13 @@ input[type=text] {
 
 /* line 194, ../sass/app.sass */
 .provider-button.twitter {
-  color: #00aced;
-  background-color: #f8f8f8;
-  border-color: #ebebeb;
+    color: #2d2d2d;
+    background-color: #CED5DC;
+    border-color: #e4e4e4;
 }
 /* line 47, ../sass/app.sass */
 .provider-button.twitter:hover {
-  background-color: #ebebeb;
+    background-color: #e4e4e4;
 }
 
 /* line 197, ../sass/app.sass */
