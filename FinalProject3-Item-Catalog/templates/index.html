@@ -2,8 +2,10 @@
 {% extends "base.html" %}
 {% block body %}
 
-
-test login <a href="login_test">Login with your social ID<br/>
+      <!-- authomatic.js is dependent on jQuery -->
+       <script type="text/javascript" src="{{ url_for('static', filename='jquery-1.9.1.min.js') }}"></script>
+       <script type="text/javascript" src="{{ url_for('static' , filename='authomatic.js') }}"></script>
+        test login <a class="authomatic" href="login_test">Login with your social ID></a><br/>
 
 
     <html xmlns="http://www.w3.org/1999/html">
@@ -92,7 +94,26 @@ test login <a href="login_test">Login with your social ID<br/>
 </div>
 </div>
 
+        <script type="text/javascript">
 
+         // Set up the library
+         authomatic.setup({
+            popupWidth: 600,
+            popupHeight: 400,
+            onLoginComplete: function(result) {
+               // Handle the login result when the popup closes.
+               if (result.user) {
+                  alert('Hello ' + result.user.name);
+               } else if (result.error) {
+                  alert('Error occurred: ' + result.error.message);
+               }
+            }
+         });
+
+         // Change behavior of links and form of class="authomatic"
+         authomatic.popupInit();
+
+      </script>
 
 
 
