@@ -1,8 +1,9 @@
-<html>
-<head>
-	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
-	</head>
-<body>
+
+{# deleteitem.html #}
+{% extends "base.html" %}
+{% block body %}
+
+
 <h1> Are you sure you want to delete {{item.name}}? </h1>
 
 <form action="{{ url_for('deleteItem',user_id = item.user_id, item_id=item.id)}}" method = 'post'>
@@ -14,6 +15,4 @@
 
 </form>
 
-</body>
-
-</html>
+{% endblock %}
