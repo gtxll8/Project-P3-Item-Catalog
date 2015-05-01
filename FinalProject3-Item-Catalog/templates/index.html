@@ -53,12 +53,12 @@
         </form>
     </div>
     {% endfor %}
-         <script type="text/javascript">
+ <script type="text/javascript">
 
          // Set up the library
          authomatic.setup({
             popupWidth: 600,
-            popupHeight: 400,
+            popupHeight: 500,
             onLoginComplete: function(result) {
                // Handle the login result when the popup closes.
                if (result.user) {
@@ -73,6 +73,5 @@
          authomatic.popupInit();
 
       </script>
-
 {% endblock %}
 </html>

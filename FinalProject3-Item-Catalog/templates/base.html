@@ -5,7 +5,6 @@
         <title>Microsalemarket</title>
         <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap-theme.min.css') }}">
         <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
-        <script type="text/javascript" src="{{ url_for('static' , filename='bootstrap.min.js') }}"></script>
         <!-- authomatic.js is dependent on jQuery -->
         <script type="text/javascript" src="{{ url_for('static' , filename='jquery.min.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static' , filename='authomatic.js') }}"></script>
@@ -65,7 +64,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     {% if not g.user.name=='Guest' %}
                     <li><a href="/admin">Logged in as: {{ g.user.name }}</a></li>
-                    <li><a href="logout">Logout</a></li>
+                    <li><a href="../logout">Logout</a></li>
                     {% else %}
                     <li><a class="authomatic" href="../login_test">Login</a></li>
                     {% endif %}
@@ -75,6 +74,11 @@
     </nav>
 
     <body>
-        {% block body %}{% endblock %}
+        {% block body %}
+
+
+
+        {% endblock %}
     </body>
+
 </html>
