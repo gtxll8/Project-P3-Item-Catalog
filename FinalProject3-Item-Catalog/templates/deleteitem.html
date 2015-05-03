@@ -8,7 +8,8 @@
 
 <form action="{{ url_for('deleteItem',user_id = item.user_id, item_id=item.id)}}" method = 'post'>
 
-<input type='submit', value = 'Delete'>
+    <input type="submit" class="btn btn-primary" value="Delete">
+    <a href="{{url_for('sellerPage', user_id=user_id)}}" target="_self" class="btn btn-success">Cancel</a></p>
 
 
 
