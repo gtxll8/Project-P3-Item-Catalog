@@ -10,7 +10,7 @@ from flask import Flask, render_template, url_for, request, redirect, flash, jso
 from config import CONFIG
 from authomatic.adapters import WerkzeugAdapter
 from authomatic import Authomatic
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Users, Base, SaleItem, Category
 from flask.ext.login import AnonymousUserMixin, LoginManager, UserMixin, login_user, logout_user, \
@@ -106,7 +106,7 @@ def login_test():
 # Home route
 @app.route('/')
 def index():
-    items = session.query(SaleItem).all()
+    items = session.query(SaleItem).order_by(desc(SaleItem.id)).all()
     return render_template('index.html', items=items)
 
 # Login handler, must accept both GET and POST to be able to use OpenID.
@@ -297,7 +297,7 @@ def deleteItem(user_id, item_id):
 @login_required
 def sellerPage():
     user = session.query(Users).filter_by(id=g.user.id).first()
-    items = session.query(SaleItem).filter_by(user_id=g.user.id)
+    items = session.query(SaleItem).order_by(desc(SaleItem.id)).filter_by(user_id=g.user.id)
     return render_template('seller_page.html', user=user, items=items)
 
 
