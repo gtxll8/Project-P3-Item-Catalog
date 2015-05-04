@@ -1,11 +1,11 @@
-{# deleteitem.html #}
+{# deleteaccount.html #}
 {% extends "base.html" %}
 {% block body %}
 
 
-<h1> Are you sure you want to delete {{item.name}}? </h1>
+<h1> Are you sure you want to delete your account: {{user_id}}? </h1>
 
-<form action="{{ url_for('deleteItem',user_id = item.user_id)}}" method='post'>
+<form action="{{ url_for('deleteAccount',user_id = user_id)}}" method='post'>
 
     <input type="submit" class="btn btn-primary" value="Delete">
     <a href="{{url_for('sellerPage', user_id=user_id)}}" target="_self" class="btn btn-success">Cancel</a></p>
