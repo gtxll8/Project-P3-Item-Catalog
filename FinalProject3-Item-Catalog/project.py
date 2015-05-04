@@ -5,7 +5,7 @@
 import os
 from werkzeug.utils import secure_filename
 from flask import Flask, render_template, url_for, request, redirect, flash, jsonify, request, redirect, url_for, \
-    send_from_directory, make_response, g
+    send_from_directory, make_response, g, logging
 
 from config import CONFIG
 from authomatic.adapters import WerkzeugAdapter
@@ -92,6 +92,7 @@ def load_user(id):
     u = session.query(Users).filter_by(id=id).first()
     if u:
         return User(u.id, u.name, u.social_id)
+        g.user = current_user
     else:
         return None
 
@@ -149,6 +150,10 @@ def login(provider_name):
                 session.add(new_user)
                 session.commit()
                 flash("New user account added !")
+                flash("And logged in!")
+                user = session.query(Users).filter_by(social_id=result.user.id).first()
+                u = User(user.id, user.name, user.social_id)
+                login_user(u)
 
         print result.user.name
         # The rest happens inside the template.
@@ -173,6 +178,15 @@ def logout():
 @app.before_request
 def before_request():
     g.user = current_user
+    print g.user
+
+
+@app.before_first_request
+def setup_logging():
+    if not app.debug:
+        # In production mode, add log handler to sys.stderr.
+        app.logger.addHandler(logging.StreamHandler())
+        app.logger.setLevel(logging.INFO)
 
 
 # Route that will process the file upload
@@ -308,24 +322,27 @@ def deleteAccount(user_id):
         for item in deletedItems:
             if item.image_name and os.path.isfile(os.path.join(app.config['UPLOAD_FOLDER'], item.image_name)):
                 os.remove(os.path.join(app.config['UPLOAD_FOLDER'], item.image_name))
-        session.query(SaleItem).filter(user_id == user_id).delete()
+                session.delete(item)
         session.query(Users).filter(Users.id == user_id).delete()
         session.commit()
-        flash("Account deleteded !")
+        flash("Your account has been deleteded !")
         items = session.query(SaleItem).all()
         render_template('index.html', items=items)
     else:
         # USE THE RENDER_TEMPLATE FUNCTION BELOW TO SEE THE VARIABLES YOU SHOULD USE IN YOUR EDITMENUITEM TEMPLATE
         return render_template('deleteaccount.html', user_id=user_id)
+    items = session.query(SaleItem).all()
+    logout_user()
+    return render_template('index.html', items=items)
 
 
 # Main seller's page
-@app.route('/')
 @app.route('/admin/')
 @login_required
 def sellerPage():
     user = session.query(Users).filter_by(id=g.user.id).first()
     items = session.query(SaleItem).order_by(desc(SaleItem.id)).filter_by(user_id=g.user.id)
+    print g.user.id
     return render_template('seller_page.html', user=user, items=items)
 
 
