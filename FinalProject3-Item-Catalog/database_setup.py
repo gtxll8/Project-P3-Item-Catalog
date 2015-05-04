@@ -27,6 +27,7 @@ class SaleItem(Base):
     image_name = Column(String(250))
     category_id = Column(Integer, ForeignKey('category.id'))
     user_id = Column(Integer, ForeignKey('users.id'))
+    user_name = Column(String(250), nullable=False)
     user = relationship(Users)
 
 

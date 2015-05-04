@@ -239,7 +239,7 @@ def newSaleItem(user_id):
     user = session.query(Users).filter_by(id=user_id).first()
     if request.method == 'POST':
         newItem = SaleItem(name=request.form['name'], description=request.form['description'],
-                           price=request.form['price'], user_id=user_id)
+                           price=request.form['price'], user_id=user_id, user_name=user.name)
         session.add(newItem)
         session.commit()
         flash("New sale item created !")
@@ -317,6 +317,7 @@ def deleteItem(user_id, item_id):
 @login_required
 def deleteAccount(user_id):
     deletedItems = session.query(SaleItem).filter_by(user_id=user_id).all()
+    user = session.query(Users).filter_by(id=user_id).first()
     if request.method == 'POST':
         # delete the file from the upload folder too
         for item in deletedItems:
@@ -330,7 +331,7 @@ def deleteAccount(user_id):
         render_template('index.html', items=items)
     else:
         # USE THE RENDER_TEMPLATE FUNCTION BELOW TO SEE THE VARIABLES YOU SHOULD USE IN YOUR EDITMENUITEM TEMPLATE
-        return render_template('deleteaccount.html', user_id=user_id)
+        return render_template('deleteaccount.html', user_id=user_id, user_name=user.name)
     items = session.query(SaleItem).all()
     logout_user()
     return render_template('index.html', items=items)
