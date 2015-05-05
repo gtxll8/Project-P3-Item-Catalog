@@ -89,6 +89,7 @@ class User(UserMixin):
 def load_user(id):
     # 1. Fetch against the database a user by `id`
     # 2. Create a new object of `User` class and return it.
+    # 3. If nothing found return None
     u = session.query(Users).filter_by(id=id).first()
     if u:
         return User(u.id, u.name, u.social_id)
