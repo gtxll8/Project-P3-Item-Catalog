@@ -240,7 +240,7 @@ def newSaleItem(user_id):
     user = session.query(Users).filter_by(id=user_id).first()
     if request.method == 'POST':
         newItem = SaleItem(name=request.form['name'], description=request.form['description'],
-                           price=request.form['price'], user_id=user_id, user_name=user.name)
+                           price=request.form['price'], user_id=user_id, user_name=user.name, category_name=['category'])
         session.add(newItem)
         session.commit()
         flash("New sale item created !")
