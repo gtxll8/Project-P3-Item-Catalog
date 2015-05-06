@@ -12,7 +12,7 @@ from authomatic.adapters import WerkzeugAdapter
 from authomatic import Authomatic
 from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
-from database_setup import Users, Base, SaleItem, Category
+from database_setup import Users, Base, SaleItem
 from flask.ext.login import AnonymousUserMixin, LoginManager, UserMixin, login_user, logout_user, \
     current_user, login_required
 import sqlite3
@@ -240,7 +240,8 @@ def newSaleItem(user_id):
     user = session.query(Users).filter_by(id=user_id).first()
     if request.method == 'POST':
         newItem = SaleItem(name=request.form['name'], description=request.form['description'],
-                           price=request.form['price'], user_id=user_id, user_name=user.name, category_name=['category'])
+                           price=request.form['price'], user_id=user_id, user_name=user.name,
+                           category_name=request.form['category'])
         session.add(newItem)
         session.commit()
         flash("New sale item created !")
@@ -269,6 +270,8 @@ def editItem(user_id, item_id):
     if request.method == 'POST':
         if request.form['name']:
             editeditem.name = request.form['name']
+        if request.form['category']:
+            editeditem.category_name = request.form['category']
         if request.form['description']:
             editeditem.description = request.form['description']
         if request.form['price']:

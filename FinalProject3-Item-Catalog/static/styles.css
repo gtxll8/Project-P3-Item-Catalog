@@ -26,4 +26,7 @@
     height:70px;
 }
 
-
+#bootstrapSelectForm .selectContainer .form-control-feedback {
+    /* Adjust feedback icon position */
+    right: -15px;
+}
