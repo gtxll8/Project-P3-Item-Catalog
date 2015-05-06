@@ -140,10 +140,10 @@ def login(provider_name):
                 u = User(user.id, user.name, user.social_id)
                 login_user(u)
                 if current_user.is_authenticated():
-                    flash('You are already logged in.')
+                    flash('Welcome back: %s' % current_user.name)
                 print current_user.name
                 print current_user.id
-                flash("Logged in!")
+                flash("You are now logged into your profile!")
                 print "already registered"
 
             else:
@@ -151,7 +151,7 @@ def login(provider_name):
                 session.add(new_user)
                 session.commit()
                 flash("New user account added !")
-                flash("And logged in!")
+                flash("Welcome: %s !" % new_user.name)
                 user = session.query(Users).filter_by(social_id=result.user.id).first()
                 u = User(user.id, user.name, user.social_id)
                 login_user(u)

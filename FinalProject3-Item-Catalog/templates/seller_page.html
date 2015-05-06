@@ -50,18 +50,11 @@
                 </a>
             </div>
 
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="Amount">
-                <span class="input-group-addon">.00</span>
+            <div class="controls">
+                <label class="control-label">Information:</label>
+                <span class="form-control-static" name='description' rows='5' cols='40'>{{i.description}}</span>
             </div>
-
-        </div>
-        <div class="form-group">
-            <label class="control-label col-xs-3" >Description:</label>
-            <div class="col-xs-9">
-                <p class="form-control-static">{{i.description}}</p>
             </div>
-        </div>
         <div class="form-group">
             <label class="control-label col-xs-3" >Price:</label>
             <div class="col-xs-9">
@@ -75,28 +68,6 @@
                       class="btn btn-danger">Delete item &raquo;</a>
                     <a href="{{url_for('editItem',user_id = i.user_id, item_id=i.id)}}" target="_self"
                        class="btn btn-success">Edit this item &raquo;</a></p>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-xs-4">
-                <div class="input-group">
-                    <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                    <input type="text" class="form-control" placeholder="Username">
-                </div>
-            </div>
-            <div class="col-xs-4">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Amount">
-                    <span class="input-group-addon">.00</span>
-                </div>
-            </div>
-            <div class="col-xs-4">
-                <div class="input-group">
-                    <span class="input-group-addon">$</span>
-                    <input type="text" class="form-control" placeholder="US Dollar">
-                    <span class="input-group-addon">.00</span>
-                </div>
             </div>
         </div>
     </form>

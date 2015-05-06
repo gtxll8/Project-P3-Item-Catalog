@@ -6,7 +6,15 @@
 
 <form class="form-horizontal" action="{{url_for('editItem', user_id=user_id, item_id=item.id )}}" method = 'POST' enctype=multipart/form-data>
     <div class="form-group">
-        <label class="control-label col-xs-3">Upload a new image:</label>
+         <label class="control-label col-xs-3" >Current image:</label>
+            <div class="col-xs-4">
+               <a href="#" class="thumbnail">
+                    <img src="{{url_for('static' , filename=item.image_name)}}" alt="125x125">
+                </a>
+            </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-3">Replace/Upload image:</label>
             <div class="col-xs-9">
                <p><input type=file name=file>
             </div>
@@ -20,7 +28,7 @@
     <div class="form-group">
         <label class="control-label col-xs-3">Description:</label>
             <div class="col-xs-9">
-               <dd><textarea name = 'description' rows='5' cols='40' placeholder = '{{item.description }}'></textarea></dd>
+               <dd><textarea name = 'description' rows='5' cols='60'>{{item.description }}</textarea></dd>
             </div>
     </div>
     <div class="form-group">
