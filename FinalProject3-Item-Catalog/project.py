@@ -351,6 +351,13 @@ def sellerPage():
     return render_template('seller_page.html', user=user, items=items)
 
 
+# Category showing
+@app.route('/category/<category_name>/', methods=['GET', 'POST'])
+def showCategory(category_name):
+    items = session.query(SaleItem).filter_by(category_name=category_name).all()
+    return render_template('index.html', items=items)
+
+
 @login_manager.unauthorized_handler
 def unauthorized():
     # do stuff

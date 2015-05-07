@@ -50,15 +50,16 @@
                     <li class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">Categories <b class="caret"></b></a>
                         <ul role="menu" class="dropdown-menu">
-                            <li><a href="#">Electronics</a></li>
-                            <li><a href="#">Clothing</a></li>
-                            <li><a href="#">Jewelery</a></li>
-                            <li><a href="#">Furniture</a></li>
-                            <li><a href="#">Motors</a></li>
-                            <li><a href="#">Households</a></li>
-                            <li><a href="#">Others</a></li>
+                            <li><a href="../category/Electronics">Electronics</a></li>
+                            <li><a href="../category/Clothing">Clothing</a></li>
+                            <li><a href="../category/Jewelery">Jewelery</a></li>
+                            <li><a href="../category/Furniture">Furniture</a></li>
+                            <li><a href="../category/Motors">Motors</a></li>
+                            <li><a href="../category/Households">Households</a></li>
+                            <li><a href="../category/Toys">Toys</a></li>
+                            <li><a href="../category/Others">Others</a></li>
                             <li class="divider"></li>
-                            <li><a href="#">All</a></li>
+                            <li><a href="../">All</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -72,7 +73,7 @@
                     <li><a href="/admin">User: {{ g.user.name }}</a></li>
                     <li><a href="../logout">Logout</a></li>
                     {% else %}
-                    <li><a class="authomatic" href="../login_test">Login</a></li>
+                    <li><a class="authomatic" href="/login_test">Login</a></li>
                     {% endif %}
                 </ul>
             </div>
