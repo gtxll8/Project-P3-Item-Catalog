@@ -358,6 +358,15 @@ def showCategory(category_name):
     return render_template('index.html', items=items)
 
 
+@app.route('/search/<search_word>', methods=['GET', 'POST'])
+def searchWord(search_word):
+    items = session.query(SaleItem).filter('description MATCH :text').params(text='flowers').all()
+    print search_word
+
+    return render_template('index.html', items=items)
+
+
+
 @login_manager.unauthorized_handler
 def unauthorized():
     # do stuff

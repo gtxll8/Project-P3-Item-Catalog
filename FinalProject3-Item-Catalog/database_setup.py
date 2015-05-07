@@ -4,7 +4,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
-from sqlalchemy.dialects.sqlite import BLOB
+
 
 Base = declarative_base()
 
@@ -31,6 +31,18 @@ class SaleItem(Base):
     user = relationship(Users)
 
 
-engine = create_engine('sqlite:///salesite.db')
+class SearchIndex(Base):
+    __tablename__ = 'search_index'
+    __table_args__ = {'prefixes': ['TEMPORARY']}
+
+    id = Column(Integer, primary_key=True)
+    description = Column(String(250))
+    name = Column(String(80), nullable=False)
+
+
+
+
+
+engine = create_engine('sqlite:///salesite.db', echo=True)
 
 Base.metadata.create_all(engine)
