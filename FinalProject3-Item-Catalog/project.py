@@ -210,7 +210,7 @@ def upload():
 
 
 # Add new image to product
-@app.route('/forsale/<int:user_id>/<int:item_id>/upload/', methods=['GET', 'POST'])
+@app.route('/forsale/<int:user_id>/<int:item_id>/upload', methods=['GET', 'POST'])
 @login_required
 def upload_file(item_id, user_id):
     if request.method == 'POST':
@@ -234,7 +234,7 @@ def send_file(filename):
 
 # Add new items
 @app.route('/')
-@app.route('/forsale/<user_id>/new/', methods=['GET', 'POST'])
+@app.route('/forsale/<user_id>/new', methods=['GET', 'POST'])
 @login_required
 def newSaleItem(user_id):
     user = session.query(Users).filter_by(id=user_id).first()
@@ -262,7 +262,7 @@ def newSaleItem(user_id):
 
 # Edit items
 @app.route('/')
-@app.route('/forsale/<int:user_id>/<int:item_id>/edit/', methods=['GET', 'POST'])
+@app.route('/forsale/<int:user_id>/<int:item_id>/edit', methods=['GET', 'POST'])
 @login_required
 def editItem(user_id, item_id):
     user = session.query(Users).filter_by(id=user_id).first()
@@ -297,7 +297,7 @@ def editItem(user_id, item_id):
 
 
 # Delete items
-@app.route('/forsale/<user_id>/<int:item_id>/delete/', methods=['GET', 'POST'])
+@app.route('/forsale/<user_id>/<int:item_id>/delete', methods=['GET', 'POST'])
 @login_required
 def deleteItem(user_id, item_id):
     deletedItem = session.query(SaleItem).filter_by(id=item_id).one()
@@ -317,7 +317,7 @@ def deleteItem(user_id, item_id):
 
 
 # Delete user account
-@app.route('/admin/<user_id>/delete/', methods=['GET', 'POST'])
+@app.route('/admin/<user_id>/delete', methods=['GET', 'POST'])
 @login_required
 def deleteAccount(user_id):
     deletedItems = session.query(SaleItem).filter_by(user_id=user_id).all()
@@ -352,7 +352,7 @@ def sellerPage():
 
 
 # Category showing
-@app.route('/category/<category_name>/', methods=['GET', 'POST'])
+@app.route('/category/<category_name>', methods=['GET', 'POST'])
 def showCategory(category_name):
     items = session.query(SaleItem).filter_by(category_name=category_name).all()
     return render_template('index.html', items=items)
