@@ -15,7 +15,7 @@ from sqlalchemy.orm import sessionmaker
 from database_setup import Users, Base, SaleItem
 from flask.ext.login import AnonymousUserMixin, LoginManager, UserMixin, login_user, logout_user, \
     current_user, login_required
-import flask.ext.whooshalchemy
+import flask.ext.whooshalchemy as whooshalchemy
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -41,7 +41,10 @@ session = DBSession()
 
 # JSOn list only one item
 
-flask.ext.whooshalchemy.whoosh_index(app, SaleItem)
+WHOOSH_BASE = os.path.join('./', 'search.db')
+app.config['WHOOSH_BASE'] = WHOOSH_BASE
+
+whooshalchemy.whoosh_index(app, SaleItem)
 
 class Anonymous(AnonymousUserMixin):
     def __init__(self):
