@@ -18,7 +18,7 @@ class Users(Base):
 
 class SaleItem(Base):
     __tablename__ = 'sale_item'
-    __searchable__ = ['content']
+    __searchable__ = ['description']
     name = Column(String(80), nullable=False)
     id = Column(Integer, primary_key=True)
     description = Column(String(250))
