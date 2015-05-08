@@ -15,7 +15,7 @@ from sqlalchemy.orm import sessionmaker
 from database_setup import Users, Base, SaleItem
 from flask.ext.login import AnonymousUserMixin, LoginManager, UserMixin, login_user, logout_user, \
     current_user, login_required
-import sqlite3
+import flask.ext.whooshalchemy
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -41,6 +41,7 @@ session = DBSession()
 
 # JSOn list only one item
 
+flask.ext.whooshalchemy.whoosh_index(app, SaleItem)
 
 class Anonymous(AnonymousUserMixin):
     def __init__(self):
@@ -360,11 +361,10 @@ def showCategory(category_name):
 
 @app.route('/search/<search_word>', methods=['GET', 'POST'])
 def searchWord(search_word):
-    items = session.query(SaleItem).filter('description MATCH :text').params(text='flowers').all()
+    items = session.query(SaleItem).filter_by(user_id=1).whoosh_search(search_word).all()
     print search_word
 
     return render_template('index.html', items=items)
-
 
 
 @login_manager.unauthorized_handler
