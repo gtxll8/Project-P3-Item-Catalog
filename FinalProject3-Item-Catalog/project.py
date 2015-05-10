@@ -40,9 +40,18 @@ DBSession = sessionmaker(bind=engine)
 # A DBSession() instance establishes all conversations with the database
 session = DBSession()
 
-# JSON list all items
+# JSON list all items in a category
+@app.route('/forsale/<category_name>/JSON')
+def forsaleCategoriesJSON(category_name):
+    items = session.query(SaleItem).filter_by(category_name=category_name).all()
+    return jsonify(SaleItem=[i.serialize for i in items])
 
-# JSOn list only one item
+
+# JSOn list items from only one user
+@app.route('/forsale/<user_name>/user/JSON')
+def forsaleByUserJSON(user_name):
+    items = session.query(SaleItem).filter_by(user_name=user_name).all()
+    return jsonify(SaleItem=[i.serialize for i in items])
 
 WHOOSH_BASE = os.path.join('./', 'search.db')
 app.config['WHOOSH_BASE'] = WHOOSH_BASE
