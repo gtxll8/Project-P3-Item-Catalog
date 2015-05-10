@@ -41,6 +41,19 @@ class SaleItem(Base):
     def __repr__(self):
         return '<sale_item %d>' % self.id
 
+        # We added this serialize function to be able to send JSON objects in a serializable format
+
+    @property
+    def serialize(self):
+        return {
+            'name': self.name,
+            'description': self.description,
+            'id': self.id,
+            'price': self.price,
+            'category_name': self.category_name,
+            'user_name': self.user_name,
+        }
+
 engine = create_engine('sqlite:///salesite.db', echo=True)
 
 Base.metadata.create_all(engine)
