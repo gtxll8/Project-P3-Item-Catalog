@@ -16,6 +16,9 @@ from database_setup import Users, Base, SaleItem
 from flask.ext.login import AnonymousUserMixin, LoginManager, UserMixin, login_user, logout_user, \
     current_user, login_required
 import flask.ext.whooshalchemy as whooshalchemy
+from flask.ext.wtf import Form
+from wtforms import StringField
+from wtforms.validators import DataRequired
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -44,7 +47,9 @@ session = DBSession()
 WHOOSH_BASE = os.path.join('./', 'search.db')
 app.config['WHOOSH_BASE'] = WHOOSH_BASE
 
-whooshalchemy.whoosh_index(app, SaleItem)
+with app.app_context():
+    whooshalchemy.whoosh_index(app, SaleItem)
+
 
 class Anonymous(AnonymousUserMixin):
     def __init__(self):
@@ -183,6 +188,7 @@ def logout():
 @app.before_request
 def before_request():
     g.user = current_user
+    g.search_form = SearchForm()
     print g.user
 
 
@@ -244,7 +250,7 @@ def newSaleItem(user_id):
     user = session.query(Users).filter_by(id=user_id).first()
     if request.method == 'POST':
         newItem = SaleItem(name=request.form['name'], description=request.form['description'],
-                           price=request.form['price'], user_id=user_id, user_name=user.name,
+                           price=request.form['price'], image_name='', user_id=user_id, user_name=user.name,
                            category_name=request.form['category'])
         session.add(newItem)
         session.commit()
@@ -362,11 +368,21 @@ def showCategory(category_name):
     return render_template('index.html', items=items)
 
 
-@app.route('/search/<search_word>', methods=['GET', 'POST'])
-def searchWord(search_word):
-    items = session.query(SaleItem).filter_by(user_id=1).whoosh_search(search_word).all()
-    print search_word
+class SearchForm(Form):
+    search = StringField('search', validators=[DataRequired()])
 
+
+@app.route('/search', methods=['GET', 'POST'])
+def searchWord():
+    items = session.query(SaleItem).all()
+    if request.method == 'POST':
+        items = session.query(SaleItem).filter(SaleItem.description.like('%' + request.form['search'] + '%')).all()
+        items_count = len(items)
+        if items_count:
+            flash("Your search returned %s results" % items_count)
+        else:
+            flash("Your search returned no results")
+        return render_template('index.html', items=items)
     return render_template('index.html', items=items)
 
 
