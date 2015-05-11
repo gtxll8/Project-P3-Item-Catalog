@@ -19,6 +19,8 @@ import flask.ext.whooshalchemy as whooshalchemy
 from flask.ext.wtf import Form
 from wtforms import StringField
 from wtforms.validators import DataRequired
+from urlparse import urljoin
+from werkzeug.contrib.atom import AtomFeed
 
 
 # Initialize the Flask application
@@ -53,6 +55,28 @@ def forsaleCategoriesJSON(category_name):
 def forsaleByUserJSON(user_name):
     items = session.query(SaleItem).filter_by(user_name=user_name).all()
     return jsonify(SaleItem=[i.serialize for i in items])
+
+
+# This is to create an external url
+# useful in the RSS feed below
+def make_external(url):
+    return urljoin(request.url_root, url)
+
+# RSS feeds using FeedAtom
+@app.route('/recent.atom')
+def recent_feed():
+    feed = AtomFeed('Recent Items',
+                    feed_url=request.url, url=request.url_root)
+    articles = session.query(SaleItem).order_by(desc(SaleItem.last_updated)).all()
+    for article in articles:
+        feed.add(article.name, unicode(article.description),
+                 content_type='html',
+                 author=article.name,
+                 url=make_external('/forsale/%s/single_item' % article.id),
+                 updated=article.last_updated,
+                 published=article.last_updated)
+    return feed.get_response()
+
 
 WHOOSH_BASE = os.path.join('./', 'search.db')
 app.config['WHOOSH_BASE'] = WHOOSH_BASE
@@ -261,7 +285,7 @@ def newSaleItem(user_id):
     if request.method == 'POST':
         newItem = SaleItem(name=request.form['name'], description=request.form['description'],
                            price=request.form['price'], image_name='', user_id=user_id, user_name=user.name,
-                           category_name=request.form['category'])
+                           category_name=request.form['category'], last_updated=None)
         session.add(newItem)
         session.commit()
         flash("New sale item created !")
@@ -358,6 +382,15 @@ def deleteAccount(user_id):
         return render_template('deleteaccount.html', user_id=user_id, user_name=user.name)
     items = session.query(SaleItem).all()
     logout_user()
+    return render_template('index.html', items=items)
+
+
+# Return single item
+@app.route('/forsale/<int:item_id>/single_item', methods=['GET', 'POST'])
+def singleItem(item_id):
+    items = session.query(SaleItem).filter_by(id=item_id).all()
+    # testing making product url
+    print make_external('/forsale/%s/single_item' % item_id)
     return render_template('index.html', items=items)
 
 
