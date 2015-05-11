@@ -4,6 +4,8 @@ from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
+from sqlalchemy.types import DateTime
+from datetime import datetime
 
 Base = declarative_base()
 
@@ -27,9 +29,10 @@ class SaleItem(Base):
     category_name = Column(String(80), nullable=False)
     user_id = Column(Integer, ForeignKey('users.id'))
     user_name = Column(String(250), nullable=False)
+    last_updated = Column(DateTime, nullable=False)
     user = relationship(Users)
 
-    def __init__(self, name, description, price, image_name, category_name, user_id, user_name):
+    def __init__(self, name, description, price, image_name, category_name, user_id, user_name, last_updated=None):
         self.name = name
         self.description = description
         self.price = price
@@ -37,6 +40,7 @@ class SaleItem(Base):
         self.category_name = category_name
         self.user_id = user_id
         self.user_name = user_name
+        self.last_updated = datetime.utcnow()
 
     def __repr__(self):
         return '<sale_item %d>' % self.id
