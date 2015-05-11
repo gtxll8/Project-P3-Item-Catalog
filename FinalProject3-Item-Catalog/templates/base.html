@@ -18,9 +18,9 @@
             }
 
             .bs-example {
-                padding: 0 200px 15px 0;
+                padding: 10px 20px 15px 0;
 
-                margin: 20px 200px;
+                margin: 0px 0px;
             }
 
             body {
@@ -28,8 +28,11 @@
             }
 
         </style>
-
-    </head>
+        <link href="{{ url_for('recent_feed') }}"
+          rel="alternate"
+          title="Recent Changes"
+          type="application/atom+xml">
+        </head>
     <nav role="navigation" class="navbar navbar-inverse navbar-fixed-top">
         <script type="text/javascript" src="{{ url_for('static' , filename='bootstrap.min.js') }}"></script>
         <div class="container-fluid">
@@ -41,7 +44,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a href="/" class="navbar-brand">MICROSALEMARKET</a>
+                <a href="/" class="navbar-brand">MICROMARKET</a>
             </div>
             <!-- Collection of nav links, forms, and other content for toggling -->
             <div id="navbarCollapse" class="collapse navbar-collapse">
@@ -70,9 +73,8 @@
                         {{ g.search_form.hidden_tag() }}
                         {{ g.search_form.search(size=20, class="form-control", placeholder=("Search")) }}
                     </div>
-                    <button type="submit" class="btn btn-default">{{ ('Search') }}</button>
+                    <button type="submit" class="btn btn-default">{{ ('Go') }}</button>
                 </form>
-                >
                 <ul class="nav navbar-nav navbar-right">
                     {% if not g.user.name=='Guest' %}
                     <li><a href="/admin">User: {{ g.user.name }}</a></li>

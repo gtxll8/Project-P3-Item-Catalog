@@ -2,7 +2,7 @@
 {% extends "base.html" %}
 {% block body %}
 
-
+<div class="panel-body">
 <h1> Are you sure you want to delete {{item.name}}? </h1>
 
 <form action="{{ url_for('deleteItem',user_id = item.user_id, item_id=item.id)}}" method = 'post'>
@@ -14,5 +14,5 @@
 
 
 </form>
-
+</div>
 {% endblock %}

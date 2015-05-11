@@ -6,6 +6,12 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 from sqlalchemy.types import DateTime
 from datetime import datetime
+from urlparse import urljoin
+from flask import request
+
+def make_external(url):
+    return urljoin(request.url_root, url)
+
 
 Base = declarative_base()
 
@@ -56,6 +62,7 @@ class SaleItem(Base):
             'price': self.price,
             'category_name': self.category_name,
             'user_name': self.user_name,
+            'url': make_external('/forsale/%s/single_item' % self.id)
         }
 
 engine = create_engine('sqlite:///salesite.db', echo=True)

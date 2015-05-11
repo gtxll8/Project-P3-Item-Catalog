@@ -1,7 +1,7 @@
 {# newitem.html #}
 {% extends "base.html" %}
 {% block body %}
-<div class="bs-example">
+<div class="panel-body">
     <h1> New Item </h1>
 
     <form class="form-horizontal" action="{{url_for('newSaleItem', user_id=user_id)}}" method='POST'

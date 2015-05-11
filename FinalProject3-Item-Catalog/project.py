@@ -3,10 +3,11 @@
 # will be used to redirect the user once the CRUDs are done
 
 import os
+from urlparse import urljoin
+
 from werkzeug.utils import secure_filename
 from flask import Flask, render_template, url_for, request, redirect, flash, jsonify, request, redirect, url_for, \
     send_from_directory, make_response, g, logging
-
 from config import CONFIG
 from authomatic.adapters import WerkzeugAdapter
 from authomatic import Authomatic
@@ -15,11 +16,9 @@ from sqlalchemy.orm import sessionmaker
 from database_setup import Users, Base, SaleItem
 from flask.ext.login import AnonymousUserMixin, LoginManager, UserMixin, login_user, logout_user, \
     current_user, login_required
-import flask.ext.whooshalchemy as whooshalchemy
 from flask.ext.wtf import Form
 from wtforms import StringField
 from wtforms.validators import DataRequired
-from urlparse import urljoin
 from werkzeug.contrib.atom import AtomFeed
 
 
@@ -32,9 +31,9 @@ authomatic = Authomatic(CONFIG, 'development', report_errors=False)
 UPLOAD_FOLDER = './static'
 # These are the extension that we are accepting to be uploaded
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
-
+# Upload folder path
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
+# create instance of teh salesite.db
 engine = create_engine('sqlite:///salesite.db')
 # Bind the engine to the metadata of the Base class so that the
 # declarative can be accessed through a DBSession instance
@@ -77,28 +76,18 @@ def recent_feed():
                  published=article.last_updated)
     return feed.get_response()
 
-
-WHOOSH_BASE = os.path.join('./', 'search.db')
-app.config['WHOOSH_BASE'] = WHOOSH_BASE
-
-with app.app_context():
-    whooshalchemy.whoosh_index(app, SaleItem)
-
-
+# When there is no user logged in use the 'Guest' account
 class Anonymous(AnonymousUserMixin):
     def __init__(self):
         self.name = 'Guest'
         self.social_id = 0
 
-
+# Using flask.ext.login to manage authentication
+# for that we need to setup the variables
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 login_manager.anonymous_user = Anonymous
-
-
-class UserNotFoundError(Exception):
-    pass
 
 
 # Load users
@@ -147,7 +136,8 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
-# Test
+# Login form to test the login credentials we are using authomatic
+# library to manage that, see code in the login.htm
 @app.route('/login_test')
 def login_test():
     return render_template('login_test.html')
@@ -177,19 +167,20 @@ def login(provider_name):
             result.user.update()
             # Check if this user is already in db
             user = session.query(Users).filter_by(social_id=result.user.id).first()
-            print result.user.id
-
             if user:
                 u = User(user.id, user.name, user.social_id)
                 login_user(u)
+                # If account exist, greet the user
                 if current_user.is_authenticated():
                     flash('Welcome back: %s' % current_user.name)
+                # Debug print / turn off for production
                 print current_user.name
                 print current_user.id
                 flash("You are now logged into your profile!")
                 print "already registered"
 
             else:
+                # Otherwise create a new user account
                 new_user = Users(social_id=result.user.id, name=result.user.name)
                 session.add(new_user)
                 session.commit()
@@ -199,33 +190,38 @@ def login(provider_name):
                 u = User(user.id, user.name, user.social_id)
                 login_user(u)
 
-        print result.user.name
-        # The rest happens inside the template.
+        # The rest happens inside the login.html template.
         return render_template('login.html', result=result, email=result.user.email)
 
     # Don't forget to return the response.
     return response
 
-
+# Logout current user using flask's LoginManager
 @app.route('/logout')
 @login_required
 def logout():
+    # get the current user logged in to use it when you say 'bye'
     user = g.user
+    # logout current user
     logout_user()
+    # following used only in Debug, turn off when in production
     print user.name, user.social_id
     print "logged out!"
     flash("You are now logged out!")
     items = session.query(SaleItem).all()
+    # redirect Guest to main page
     return render_template('index.html', items=items)
 
-
+# Update global user before request in order
+# to cache it for further use
 @app.before_request
 def before_request():
     g.user = current_user
     g.search_form = SearchForm()
     print g.user
 
-
+# This can be used as default implementation for logs
+# Flask does not perform any logging by default
 @app.before_first_request
 def setup_logging():
     if not app.debug:
@@ -259,18 +255,23 @@ def upload():
 def upload_file(item_id, user_id):
     if request.method == 'POST':
         file = request.files['file']
+        # check if the file extension is an allowed one
         if file and allowed_file(file.filename):
-            print item_id
+            # Using secure here to prevent any security issues that may
+            # appear if user is trying to inject malicious code in the request form
+            # for the file's path
             filename = secure_filename(file.filename)
+            # save file in teh static folder
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             editedItem = session.query(SaleItem).filter_by(id=item_id).one()
+            # replace spaces with underscores in teh file's name
             editedItem.image_name = file.filename.replace(" ", "_")
             session.add(editedItem)
             session.commit()
             flash("New image added !")
             return redirect(url_for('sellerPage', user_id=user_id))
 
-
+# Used to browse an image file from teh static directory
 @app.route('/static/<filename>')
 def send_file(filename):
     return send_from_directory(UPLOAD_FOLDER, filename)
@@ -283,6 +284,7 @@ def send_file(filename):
 def newSaleItem(user_id):
     user = session.query(Users).filter_by(id=user_id).first()
     if request.method == 'POST':
+        # first add the item's details in the database
         newItem = SaleItem(name=request.form['name'], description=request.form['description'],
                            price=request.form['price'], image_name='', user_id=user_id, user_name=user.name,
                            category_name=request.form['category'], last_updated=None)
@@ -290,15 +292,23 @@ def newSaleItem(user_id):
         session.commit()
         flash("New sale item created !")
         item = session.query(SaleItem).order_by(SaleItem.id.desc()).first()
+        # the if there is an image file for the product upload it to
+        # the static folder and add the image name in the db.
+        # This way we are not storing them directly in the db
         file = request.files['file']
         if file and allowed_file(file.filename):
+            # clean path string with secure_filename
             filename = secure_filename(file.filename)
+            # save file
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            # get the item details
             editedItem = session.query(SaleItem).filter_by(id=item.id).one()
+            # replace teh blank spaces in the name and add it to the image_name column
             editedItem.image_name = file.filename.replace(" ", "_")
             session.add(editedItem)
             session.commit()
             flash("New image added !")
+            # all good redirect to teh seller's admin page
         return redirect(url_for('sellerPage', user_id=user_id))
     else:
         return render_template('newitem.html', user=user, user_id=user_id)
@@ -311,6 +321,7 @@ def newSaleItem(user_id):
 def editItem(user_id, item_id):
     user = session.query(Users).filter_by(id=user_id).first()
     editeditem = session.query(SaleItem).filter_by(id=item_id).one()
+    # get all the forms values
     if request.method == 'POST':
         if request.form['name']:
             editeditem.name = request.form['name']
@@ -320,21 +331,28 @@ def editItem(user_id, item_id):
             editeditem.description = request.form['description']
         if request.form['price']:
             editeditem.price = request.form['price']
+        # update teh item with the new changes, if any
         session.add(editeditem)
         session.commit()
         flash("Change saved !")
+        # if user had uploaded a new image file, search for the old
+        # file and delete it before adding the new one
         product_file = request.files['file']
         if product_file and allowed_file(product_file.filename):
-            # Remove the old file from folder
+            # Remove the old image file from folder
             if editeditem.image_name and os.path.isfile(
                     os.path.join(app.config['UPLOAD_FOLDER'], editeditem.image_name)):
                 os.remove(os.path.join(app.config['UPLOAD_FOLDER'], editeditem.image_name))
+            # add the new one here, after cleaning the path string
             filename = secure_filename(product_file.filename)
             product_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            # make sure file name does not have any spaces
             editeditem.image_name = product_file.filename.replace(" ", "_")
+            # add the replacing image to the item
             session.add(editeditem)
             session.commit()
             flash("New image added !")
+            # all good redirect to teh seller's admin page
         return redirect(url_for('sellerPage', user_id=user_id))
     else:
         return render_template('edititem.html', user=user, user_id=user_id, item=editeditem)
@@ -354,9 +372,9 @@ def deleteItem(user_id, item_id):
         session.delete(deletedItem)
         session.commit()
         flash("Item deleted !")
+        # redirect back to the user's admin page
         return redirect(url_for('sellerPage', user_id=user_id))
     else:
-        # USE THE RENDER_TEMPLATE FUNCTION BELOW TO SEE THE VARIABLES YOU SHOULD USE IN YOUR EDITMENUITEM TEMPLATE
         return render_template('deleteitem.html', user_id=user_id, item_id=item_id, item=deletedItem)
 
 
@@ -367,21 +385,25 @@ def deleteAccount(user_id):
     deletedItems = session.query(SaleItem).filter_by(user_id=user_id).all()
     user = session.query(Users).filter_by(id=user_id).first()
     if request.method == 'POST':
-        # delete the file from the upload folder too
+        # delete all the files from the upload folder too !
         for item in deletedItems:
+            # check if the file is present in the static directory
             if item.image_name and os.path.isfile(os.path.join(app.config['UPLOAD_FOLDER'], item.image_name)):
                 os.remove(os.path.join(app.config['UPLOAD_FOLDER'], item.image_name))
                 session.delete(item)
+        # find the user and delete the record
         session.query(Users).filter(Users.id == user_id).delete()
         session.commit()
         flash("Your account has been deleteded !")
         items = session.query(SaleItem).all()
+        # since there is not a user logged in redirect to the main page
         render_template('index.html', items=items)
     else:
-        # USE THE RENDER_TEMPLATE FUNCTION BELOW TO SEE THE VARIABLES YOU SHOULD USE IN YOUR EDITMENUITEM TEMPLATE
         return render_template('deleteaccount.html', user_id=user_id, user_name=user.name)
+    # make sure you logout the user or an error will be raised
     items = session.query(SaleItem).all()
     logout_user()
+    # redirect to hom epage
     return render_template('index.html', items=items)
 
 
@@ -389,8 +411,6 @@ def deleteAccount(user_id):
 @app.route('/forsale/<int:item_id>/single_item', methods=['GET', 'POST'])
 def singleItem(item_id):
     items = session.query(SaleItem).filter_by(id=item_id).all()
-    # testing making product url
-    print make_external('/forsale/%s/single_item' % item_id)
     return render_template('index.html', items=items)
 
 
@@ -398,15 +418,16 @@ def singleItem(item_id):
 @app.route('/admin/')
 @login_required
 def sellerPage():
+    # return user's id and teh items for that user
     user = session.query(Users).filter_by(id=g.user.id).first()
     items = session.query(SaleItem).order_by(desc(SaleItem.id)).filter_by(user_id=g.user.id)
-    print g.user.id
     return render_template('seller_page.html', user=user, items=items)
 
 
 # Category showing
 @app.route('/category/<category_name>', methods=['GET', 'POST'])
 def showCategory(category_name):
+    # find all the items on a certain category
     items = session.query(SaleItem).filter_by(category_name=category_name).all()
     return render_template('index.html', items=items)
 
@@ -435,6 +456,10 @@ def unauthorized():
     items = session.query(SaleItem).all()
     flash("Hello Guest, you need to login!")
     return render_template('index.html', items=items)
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('doesnotexist.html'), 404
 
 
 if __name__ == '__main__':

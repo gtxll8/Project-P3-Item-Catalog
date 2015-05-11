@@ -1,7 +1,7 @@
 {# edititem.html #}
 {% extends "base.html" %}
 {% block body %}
-<div class="bs-example">
+<div class="panel-body">
 <h1> Edit Item </h1>
 
 <form class="form-horizontal" action="{{url_for('editItem', user_id=user_id, item_id=item.id )}}" method = 'POST' enctype=multipart/form-data>
