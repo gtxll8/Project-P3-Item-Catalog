@@ -61,7 +61,8 @@ def forsaleByUserJSON(user_name):
 def make_external(url):
     return urljoin(request.url_root, url)
 
-# RSS feeds using FeedAtom
+
+# RSS feeds using AtomFeed
 @app.route('/recent.atom')
 def recent_feed():
     feed = AtomFeed('Recent Items',
