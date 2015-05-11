@@ -426,7 +426,7 @@ def sellerPage():
 
 
 # Category showing
-@app.route('/category/<category_name>', methods=['GET', 'POST'])
+@app.route('/category/<category_name>/', methods=['GET', 'POST'])
 def showCategory(category_name):
     # find all the items on a certain category
     items = session.query(SaleItem).filter_by(category_name=category_name).all()
