@@ -431,32 +431,37 @@ def showCategory(category_name):
     items = session.query(SaleItem).filter_by(category_name=category_name).all()
     return render_template('index.html', items=items)
 
-
+# Thi is needed it so you can pass the search value from teh base template
+# , using global g.search_form to get it in the searchWord() def.
 class SearchForm(Form):
     search = StringField('search', validators=[DataRequired()])
 
-
+# simple search with the searched word querying description field in sale_item
 @app.route('/search', methods=['GET', 'POST'])
 def searchWord():
     items = session.query(SaleItem).all()
     if request.method == 'POST':
         items = session.query(SaleItem).filter(SaleItem.description.like('%' + request.form['search'] + '%')).all()
+        # check if any results returned and flash messages accordingly
         items_count = len(items)
         if items_count:
             flash("Your search returned %s results" % items_count)
         else:
             flash("Your search returned no results")
         return render_template('index.html', items=items)
+    # return teh results in the main page
     return render_template('index.html', items=items)
 
 
 @login_manager.unauthorized_handler
 def unauthorized():
-    # do stuff
+    # in case Guest user is trying to access resources which are meant for logged in
+    # users only then warn user that it needs to be logged in.
     items = session.query(SaleItem).all()
     flash("Hello Guest, you need to login!")
     return render_template('index.html', items=items)
 
+# 404 page error handling , give user sme viable helping choices
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('doesnotexist.html'), 404
