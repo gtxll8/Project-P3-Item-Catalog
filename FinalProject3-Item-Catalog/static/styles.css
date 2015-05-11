@@ -30,3 +30,21 @@
     /* Adjust feedback icon position */
     right: -15px;
 }
+
+* {
+    margin: 0;
+}
+html, body {
+    height: 100%;
+}
+.wrapper {
+
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -155px; /* the bottom margin is the negative value of the footer's height */
+}
+.footer, .push {
+    text-align: center;
+    height: 50px; /* .push must be the same height as .footer */
+}
