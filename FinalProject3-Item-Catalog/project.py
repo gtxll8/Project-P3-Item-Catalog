@@ -20,7 +20,8 @@ from flask.ext.wtf import Form
 from wtforms import StringField
 from wtforms.validators import DataRequired
 from werkzeug.contrib.atom import AtomFeed
-
+import logging
+from logging.handlers import RotatingFileHandler
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -220,15 +221,6 @@ def before_request():
     g.user = current_user
     g.search_form = SearchForm()
     print g.user
-
-# This can be used as default implementation for logs
-# Flask does not perform any logging by default
-@app.before_first_request
-def setup_logging():
-    if not app.debug:
-        # In production mode, add log handler to sys.stderr.
-        app.logger.addHandler(logging.StreamHandler())
-        app.logger.setLevel(logging.INFO)
 
 
 # Route that will process the file upload
@@ -465,10 +457,18 @@ def unauthorized():
 # 404 page error handling , give user sme viable helping choices
 @app.errorhandler(404)
 def page_not_found(e):
+    # Logging the error in teh log file
+    app.logger.error('An error occurred')
     return render_template('doesnotexist.html'), 404
 
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
     app.debug = True
+    # This can be used as default implementation for logs
+    # Flask does not perform any logging by default
+    handler = RotatingFileHandler('setup_logging.log', maxBytes=10000, backupCount=1)
+    handler.setLevel(logging.ERROR)
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    app.logger.addHandler(handler)
     app.run(host='0.0.0.0', port=8080)
