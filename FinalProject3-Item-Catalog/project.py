@@ -6,8 +6,8 @@ import os
 from urlparse import urljoin
 
 from werkzeug.utils import secure_filename
-from flask import Flask, render_template, url_for, request, redirect, flash, jsonify, request, redirect, url_for, \
-    send_from_directory, make_response, g, logging
+from flask import Flask, render_template, flash, jsonify, request, redirect, url_for, \
+    send_from_directory, make_response, g
 from config import CONFIG
 from authomatic.adapters import WerkzeugAdapter
 from authomatic import Authomatic
@@ -25,6 +25,10 @@ from logging.handlers import RotatingFileHandler
 
 # Initialize the Flask application
 app = Flask(__name__)
+
+# if you want to use sessions this needs to be set
+# to a real secret key !
+app.secret_key = 'super_secret_key'
 
 # Instantiate Authomatic.
 authomatic = Authomatic(CONFIG, 'development', report_errors=False)
@@ -463,7 +467,6 @@ def page_not_found(e):
 
 
 if __name__ == '__main__':
-    app.secret_key = 'super_secret_key'
     app.debug = True
     # This can be used as default implementation for logs
     # Flask does not perform any logging by default
@@ -471,4 +474,4 @@ if __name__ == '__main__':
     handler.setLevel(logging.ERROR)
     formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     app.logger.addHandler(handler)
-    app.run(host='0.0.0.0', port=8080)
+    app.run()
