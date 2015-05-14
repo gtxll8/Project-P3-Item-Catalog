@@ -7,3 +7,4 @@ pip install gunicorn
 pip install authomatic
 pip install Flask-Login
 pip install Flask-WTF
+pip install git+https://github.com/gtxll8/Project-P3-Item-Catalog.git@Project3
