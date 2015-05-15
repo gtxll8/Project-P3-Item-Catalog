@@ -10,8 +10,8 @@ CONFIG = {
         'class_': oauth1.Twitter,
 
         # Twitter is an AuthorizationProvider so we need to set several other properties too:
-        'consumer_key': 'wM0LNsBC6W0VOwIEaZuMxsP5d',
-        'consumer_secret': 'aXtrzZHC3kbQKHsm0EX9DnvIOJeg8ZugU8o1IP2txDjnM6YG2K',
+        'consumer_key': '5BPsGA0dUIPdFjWO3rs8r2BAP',
+        'consumer_secret': 'ja8ztbL11o9GaR6ljElviM3Fz2i67PXosaEbZjPSTXfldg4DAc',
     },
 
         'github': { # Your internal provider name
@@ -20,8 +20,8 @@ CONFIG = {
         'class_': oauth2.GitHub,
 
         # Twitter is an AuthorizationProvider so we need to set several other properties too:
-        'consumer_key': '2cb3423c3307604727e0',
-        'consumer_secret': 'efe045296c5e8763a9ab0cc6eac36a7718ca6f77',
+        'consumer_key': '36ee18c6a4ab61e50cc4',
+        'consumer_secret': 'f497fa2cdca036fcf496a5561f9f213541cc6fd3',
         'access_headers': {'User-Agent': 'Awesome-Octocat-App'},
         'scope': ['id', 'email', 'name'],
     },
