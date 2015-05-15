@@ -17,18 +17,24 @@ from database_setup import Users, Base, SaleItem
 from flask.ext.login import AnonymousUserMixin, LoginManager, UserMixin, login_user, logout_user, \
     current_user, login_required
 from flask.ext.wtf import Form
+from flask_wtf.csrf import CsrfProtect
 from wtforms import StringField
 from wtforms.validators import DataRequired
 from werkzeug.contrib.atom import AtomFeed
 import logging
 from logging.handlers import RotatingFileHandler
+WTF_CSRF_ENABLED = True
 
+csrf = CsrfProtect()
 # Initialize the Flask application
 app = Flask(__name__)
+csrf.init_app(app)
+# CSRF Protection not just through Flask-WTF
+CsrfProtect(app)
 
 # if you want to use sessions this needs to be set
 # to a real secret key !
-app.secret_key = 'super_secret_key'
+app.secret_key = '211219898SPKIREW12'
 
 # Instantiate Authomatic.
 authomatic = Authomatic(CONFIG, 'development', report_errors=False)
@@ -477,6 +483,6 @@ if __name__ == '__main__':
     formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     app.logger.addHandler(handler)
     # test-environment
-    app.run(host='0.0.0.0', port=8080)
+    # app.run(host='0.0.0.0', port=8080)
     # production
-    # app.run()
+    app.run()
