@@ -8,3 +8,4 @@ pip install gunicorn
 pip install authomatic
 pip install Flask-Login
 pip install Flask-WTF
+pip install flask-seasurf
