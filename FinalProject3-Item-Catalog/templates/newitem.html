@@ -6,6 +6,9 @@
 
     <form class="form-horizontal" action="{{url_for('newSaleItem', user_id=user_id)}}" method='POST'
           enctype=multipart/form-data>
+        <!-- The extension adds a global function to the Jinja template engine called csrf_token.
+         This is a function that retrieves the current token and will be matched against the request token-->
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
         <div class="form-group">
             <label class="control-label col-xs-3">Upload a new image:</label>
 

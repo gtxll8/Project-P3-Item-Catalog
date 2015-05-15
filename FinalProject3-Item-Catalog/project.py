@@ -7,7 +7,7 @@ from urlparse import urljoin
 
 from werkzeug.utils import secure_filename
 from flask import Flask, render_template, flash, jsonify, request, redirect, url_for, \
-    send_from_directory, make_response, g
+    send_from_directory, make_response, g, session
 from config import CONFIG
 from authomatic.adapters import WerkzeugAdapter
 from authomatic import Authomatic
@@ -22,10 +22,13 @@ from wtforms.validators import DataRequired
 from werkzeug.contrib.atom import AtomFeed
 import logging
 from logging.handlers import RotatingFileHandler
+from flask.ext.seasurf import SeaSurf
 
 # Initialize the Flask application
 app = Flask(__name__)
-
+# CSRF Protection with Flask seaSurf
+# https://flask-seasurf.readthedocs.org/en/latest/
+csrf = SeaSurf(app)
 # if you want to use sessions this needs to be set
 # to a real secret key !
 app.secret_key = 'super_secret_key'
@@ -46,6 +49,7 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 # A DBSession() instance establishes all conversations with the database
 session = DBSession()
+
 
 # JSON list all items in a category
 @app.route('/forsale/<category_name>/JSON')
