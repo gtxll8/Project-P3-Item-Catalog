@@ -50,8 +50,15 @@
             </div>
         </div>
         <div class="form-group">
+            <label class="control-label col-xs-3">Preferred Contact:</label>
+
+            <div class="col-xs-9">
+                <dd><input type='text' size='8' name='contact'></dd>
+            </div>
+        </div>
+        <div class="form-group">
             <div class="col-xs-offset-3 col-xs-9">
-                <input type="submit" class="btn btn-primary" value="Save">
+                <input type="submit" class="btn btn-primary" value="List">
                 <a href="{{url_for('sellerPage', user_id=user_id)}}" target="_self"
                    class="btn btn-success">Cancel</a></p>
             </div>
