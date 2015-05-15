@@ -13,6 +13,8 @@ I've used a very easy to implement authentication and authorization python libra
 Authomatic http://peterhudec.github.io/authomatic/index.html
 to manage the login session I've used LoginManager from Flask.
 
+For protection against CSFR I've used Flask-seaSurf : https://flask-seasurf.readthedocs.org/en/latest/
+
 What does this example achieve :
 
 It passes al the requirements asked for in 'Project-P3-Item-Catalog' final project :
