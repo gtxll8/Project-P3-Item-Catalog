@@ -35,10 +35,11 @@ class SaleItem(Base):
     category_name = Column(String(80), nullable=False)
     user_id = Column(Integer, ForeignKey('users.id'))
     user_name = Column(String(250), nullable=False)
+    contact = Column(String(250))
     last_updated = Column(DateTime, nullable=False)
     user = relationship(Users)
 
-    def __init__(self, name, description, price, image_name, category_name, user_id, user_name, last_updated=None):
+    def __init__(self, name, description, price, image_name, category_name, user_id, user_name, contact, last_updated=None):
         self.name = name
         self.description = description
         self.price = price
@@ -46,6 +47,7 @@ class SaleItem(Base):
         self.category_name = category_name
         self.user_id = user_id
         self.user_name = user_name
+        self.contact = contact
         self.last_updated = datetime.utcnow()
 
     def __repr__(self):
@@ -62,6 +64,7 @@ class SaleItem(Base):
             'price': self.price,
             'category_name': self.category_name,
             'user_name': self.user_name,
+            'contact': self.contact,
             'url': make_external('/forsale/%s/single_item' % self.id)
         }
 

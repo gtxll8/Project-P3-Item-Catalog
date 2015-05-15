@@ -7,7 +7,7 @@ from urlparse import urljoin
 
 from werkzeug.utils import secure_filename
 from flask import Flask, render_template, flash, jsonify, request, redirect, url_for, \
-    send_from_directory, make_response, g, session
+    send_from_directory, make_response, g
 from config import CONFIG
 from authomatic.adapters import WerkzeugAdapter
 from authomatic import Authomatic
@@ -17,21 +17,24 @@ from database_setup import Users, Base, SaleItem
 from flask.ext.login import AnonymousUserMixin, LoginManager, UserMixin, login_user, logout_user, \
     current_user, login_required
 from flask.ext.wtf import Form
+from flask_wtf.csrf import CsrfProtect
 from wtforms import StringField
 from wtforms.validators import DataRequired
 from werkzeug.contrib.atom import AtomFeed
 import logging
 from logging.handlers import RotatingFileHandler
-from flask.ext.seasurf import SeaSurf
+WTF_CSRF_ENABLED = True
 
+csrf = CsrfProtect()
 # Initialize the Flask application
 app = Flask(__name__)
-# CSRF Protection with Flask seaSurf
-# https://flask-seasurf.readthedocs.org/en/latest/
-csrf = SeaSurf(app)
+csrf.init_app(app)
+# CSRF Protection not just through Flask-WTF
+CsrfProtect(app)
+
 # if you want to use sessions this needs to be set
 # to a real secret key !
-app.secret_key = 'super_secret_key'
+app.secret_key = '211219898SPKIREW12'
 
 # Instantiate Authomatic.
 authomatic = Authomatic(CONFIG, 'development', report_errors=False)
@@ -49,7 +52,6 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 # A DBSession() instance establishes all conversations with the database
 session = DBSession()
-
 
 # JSON list all items in a category
 @app.route('/forsale/<category_name>/JSON')
@@ -288,7 +290,7 @@ def newSaleItem(user_id):
         # first add the item's details in the database
         newItem = SaleItem(name=request.form['name'], description=request.form['description'],
                            price=request.form['price'], image_name='', user_id=user_id, user_name=user.name,
-                           category_name=request.form['category'], last_updated=None)
+                           contact=request.form['contact'], category_name=request.form['category'], last_updated=None)
         session.add(newItem)
         session.commit()
         flash("New sale item created !")
@@ -330,6 +332,8 @@ def editItem(user_id, item_id):
             editeditem.category_name = request.form['category']
         if request.form['description']:
             editeditem.description = request.form['description']
+        if request.form['contact']:
+            editeditem.contact = request.form['contact']
         if request.form['price']:
             editeditem.price = request.form['price']
         # update teh item with the new changes, if any
@@ -478,4 +482,7 @@ if __name__ == '__main__':
     handler.setLevel(logging.ERROR)
     formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     app.logger.addHandler(handler)
-    app.run(host='0.0.0.0', port=8080)
+    # test-environment
+    # app.run(host='0.0.0.0', port=8080)
+    # production
+    app.run()
