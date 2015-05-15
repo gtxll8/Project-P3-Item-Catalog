@@ -474,4 +474,4 @@ if __name__ == '__main__':
     handler.setLevel(logging.ERROR)
     formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     app.logger.addHandler(handler)
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port=8080)
