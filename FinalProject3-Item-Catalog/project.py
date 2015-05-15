@@ -17,20 +17,19 @@ from database_setup import Users, Base, SaleItem
 from flask.ext.login import AnonymousUserMixin, LoginManager, UserMixin, login_user, logout_user, \
     current_user, login_required
 from flask.ext.wtf import Form
-from flask_wtf.csrf import CsrfProtect
 from wtforms import StringField
 from wtforms.validators import DataRequired
 from werkzeug.contrib.atom import AtomFeed
 import logging
 from logging.handlers import RotatingFileHandler
-WTF_CSRF_ENABLED = True
+from flask.ext.seasurf import SeaSurf
 
-csrf = CsrfProtect()
 # Initialize the Flask application
 app = Flask(__name__)
+# CSRF Protection with Flask seaSurf
+# https://flask-seasurf.readthedocs.org/en/latest/
+csrf = SeaSurf(app)
 csrf.init_app(app)
-# CSRF Protection not just through Flask-WTF
-CsrfProtect(app)
 
 # if you want to use sessions this needs to be set
 # to a real secret key !
@@ -253,6 +252,7 @@ def upload():
 
 
 # Add new image to product
+@csrf.include
 @app.route('/forsale/<int:user_id>/<int:item_id>/upload', methods=['GET', 'POST'])
 @login_required
 def upload_file(item_id, user_id):
@@ -281,6 +281,7 @@ def send_file(filename):
 
 
 # Add new items
+@csrf.include
 @app.route('/')
 @app.route('/forsale/<user_id>/new', methods=['GET', 'POST'])
 @login_required
@@ -318,6 +319,7 @@ def newSaleItem(user_id):
 
 
 # Edit items
+@csrf.include
 @app.route('/')
 @app.route('/forsale/<int:user_id>/<int:item_id>/edit', methods=['GET', 'POST'])
 @login_required
@@ -364,6 +366,7 @@ def editItem(user_id, item_id):
 
 
 # Delete items
+@csrf.include
 @app.route('/forsale/<user_id>/<int:item_id>/delete', methods=['GET', 'POST'])
 @login_required
 def deleteItem(user_id, item_id):
@@ -384,6 +387,7 @@ def deleteItem(user_id, item_id):
 
 
 # Delete user account
+@csrf.include
 @app.route('/admin/<user_id>/delete', methods=['GET', 'POST'])
 @login_required
 def deleteAccount(user_id):
@@ -413,6 +417,7 @@ def deleteAccount(user_id):
 
 
 # Return single item
+@csrf.include
 @app.route('/forsale/<int:item_id>/single_item', methods=['GET', 'POST'])
 def singleItem(item_id):
     items = session.query(SaleItem).filter_by(id=item_id).all()
@@ -430,6 +435,7 @@ def sellerPage():
 
 
 # Category showing
+@csrf.include
 @app.route('/category/<category_name>/', methods=['GET', 'POST'])
 def showCategory(category_name):
     # find all the items on a certain category
@@ -442,6 +448,7 @@ class SearchForm(Form):
     search = StringField('search', validators=[DataRequired()])
 
 # simple search with the searched word querying description field in sale_item
+@csrf.exempt
 @app.route('/search', methods=['GET', 'POST'])
 def searchWord():
     items = session.query(SaleItem).all()
@@ -483,6 +490,6 @@ if __name__ == '__main__':
     formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     app.logger.addHandler(handler)
     # test-environment
-    # app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=8080)
     # production
-    app.run()
+    # app.run()
