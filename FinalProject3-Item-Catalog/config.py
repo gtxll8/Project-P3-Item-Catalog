@@ -13,7 +13,6 @@ CONFIG = {
         'consumer_key': '5BPsGA0dUIPdFjWO3rs8r2BAP',
         'consumer_secret': 'ja8ztbL11o9GaR6ljElviM3Fz2i67PXosaEbZjPSTXfldg4DAc',
     },
-
         'github': { # Your internal provider name
 
         # Provider class
@@ -21,7 +20,7 @@ CONFIG = {
 
         # Twitter is an AuthorizationProvider so we need to set several other properties too:
         'consumer_key': '36ee18c6a4ab61e50cc4',
-        'consumer_secret': 'f497fa2cdca036fcf496a5561f9f213541cc6fd3',
+        'consumer_secret': '90b523efa0f80d4faef6f3ebab6d0efa9a0697a4',
         'access_headers': {'User-Agent': 'Awesome-Octocat-App'},
         'scope': ['id', 'email', 'name'],
     },
