@@ -284,7 +284,7 @@ def newSaleItem(user_id):
         # first add the item's details in the database
         newItem = SaleItem(name=request.form['name'], description=request.form['description'],
                            price=request.form['price'], image_name='', user_id=user_id, user_name=user.name,
-                           category_name=request.form['category'], last_updated=None)
+                           contact=request.form['contact'], category_name=request.form['category'], last_updated=None)
         session.add(newItem)
         session.commit()
         flash("New sale item created !")
@@ -326,6 +326,8 @@ def editItem(user_id, item_id):
             editeditem.category_name = request.form['category']
         if request.form['description']:
             editeditem.description = request.form['description']
+        if request.form['contact']:
+            editeditem.contact = request.form['contact']
         if request.form['price']:
             editeditem.price = request.form['price']
         # update teh item with the new changes, if any
