@@ -16,6 +16,12 @@ Also to manage the login session I've used LoginManager from Flask.
 What does this example achieve :
 
 It passes al the requirements asked for in 'Project-P3-Item-Catalog' final project :
- - Implements JSON endpoints and Atom feeds with AtomFeed.
- - 
+ - Implements JSON endpoints and recent items feeds with AtomFeeds.
+ - Items stored are categorised and they can be viewed from th drop-down menu
+ - Search result queries can be done and viewed in the page
+ - Items have images that can be uploaded and managed ( delete/update )
+ - Using forms to update/edit/delete items, includes replacing the images
+ - When a user account is deleted all teh images are also deleted from the static directory
+ - Using a base template to manage 
+ 
 
