@@ -162,6 +162,7 @@ def index():
 
 
 # Login handler, must accept both GET and POST to be able to use OpenID.
+@csrf.include
 @app.route('/login/<provider_name>/', methods=['GET', 'POST'])
 def login(provider_name):
     # We need response object for the WerkzeugAdapter.
@@ -233,6 +234,7 @@ def before_request():
 
 
 # Route that will process the file upload
+@csrf.include
 @app.route('/upload', methods=['POST'])
 @login_required
 def upload():
