@@ -34,11 +34,13 @@ How to install and test:
 1 - Install vagrant if you don't have it, use the excellent Udacity's link : https://www.udacity.com/wiki/ud197/install-vagrant
 
 2 - Clone this repository and cd to main folder 'Project-P3-Item-Catalog' it should look like this :
-
+'''
     -rw-rw-r-- 1 g g   26 May 15 14:40 README.md
     -rw-rw-r-- 1 g g  267 May 15 14:40 pg_config.sh
     -rw-rw-r-- 1 g g  591 May 15 14:45 Vagrantfile
     drwxrwxr-x 4 g g 4.0K May 15 15:01 FinalProject3-Item-Catalog
+'''
+
 
 
 
