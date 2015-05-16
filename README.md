@@ -23,11 +23,11 @@ It passes al the requirements asked for in 'Project-P3-Item-Catalog' final proje
  - Implements JSON endpoints and feeds with AtomFeeds ( ex. http://127.0.0.1:8080/recent.atom )
  - Using third party authorization/authentication with Authomatic library. Using only GitHub, Twitter and Google+, others can be easily implemented.
  - Items stored are categorised, they can be selected and viewed from the drop-down menu.
- - Search in page implemented.
+ - Search in page.
  - Items have images and can be uploaded and managed ( delete/update ).
- - CRUD implemented, using forms to update/edit/delete items, including replacing item images.
+ - CRUD, using forms to update/edit/delete items, including replacing item images.
  - When a user account is deleted all the images are also deleted from the static directory.
- - Using a base template so template pages can inherit the styles.
+ - Using a base_template.html so template pages can inherit the styles.
  - Responsive design, mobile device ready using Bootstrap 3.
  - Using Flask-SeaSurf library to prevent CSRF attacks and also Flask-WTF.
 
@@ -35,7 +35,7 @@ How to install and test:
 
 1 - Install vagrant if you don't have it, use the excellent Udacity's link : https://www.udacity.com/wiki/ud197/install-vagrant
 
-2 - Clone this repository and cd to main folder 'Project-P3-Item-Catalog' it should look like this :
+2 - Clone this repository and cd inside the main folder 'Project-P3-Item-Catalog' it should look like this :
 
  ```
     -rw-rw-r-- 1 g g   26 May 15 14:40 README.md
@@ -81,6 +81,14 @@ How to install and test:
    ```
    Gunicorn and Nginx are only necessary if you would like to host this app on a cloud server.
 
+ 4 - CD inside FinalProject3-Item-Catalog. The database is already generated : salesite.db but you can also initiate
+ it running 'python database_setup.py'.
+
+ 5 - To run the app issue 'python project.py' and then check it out in your browser at http://127.0.0.1:8080
+
+ Final note:
+  Because some providers don't accept private IP addresses I've register it using a domain name micromarket.no-ip.biz
+  if you have problems testing Twitter add it into your hosts file : sudo nano /etc/hosts and add 127.0.0.1 micromarket.no-ip.biz
 
 
 
