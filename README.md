@@ -42,10 +42,12 @@ How to install and test:
     drwxrwxr-x 4 g g 4.0K May 15 15:01 FinalProject3-Item-Catalog
 
  ```
- The Vagrant file content has a link from your local path where the repository had been cloned so it
- can synchronize it inside vagrant thus no need to clone again, so as per below replace the
+ Important:
+ In the Vagrant file you will need to set the 'synced_folder' with the local path where you cloned the project
+ this will synchronize it inside vagrant thus no need to clone it again. Replace the
   <** Local Path to where you've cloned the repository **> with yours. Example : "C:/users/g/Project-P3-Item-Catalog"
-
+ ( note the forward slashes ) If you have problems with this just remove this setting and manually clone the repository
+  inside the vagrant box.
   ```
     # -*- mode: ruby -*-
     # vi: set ft=ruby :
@@ -61,8 +63,21 @@ How to install and test:
       config.vm.network "forwarded_port", guest: 8080, host: 8080
       config.vm.network "forwarded_port", guest: 5000, host: 5000
     end
-  ```
 
+  ```
+ 3 - Issue 'vagrant up'. All the requirements will be installed from the pg_config.sh. These are :
+   ``````
+    apt-get -qqy install python-flask python-sqlalchemy
+    apt-get -qqy install python-pip
+    apt-get -qqy install nginx
+    apt-get -qqy install git
+    pip install gunicorn
+    pip install authomatic
+    pip install Flask-Login
+    pip install Flask-WTF
+    pip install flask-seasurf
+   ```
+   Gunicorn and Nginx are only necessary if you would like to host this app on a cloud server.
 
 
 
