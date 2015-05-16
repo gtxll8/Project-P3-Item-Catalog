@@ -11,7 +11,7 @@ database, it will only store an ID so it can relate to the items sold.
 
 I've used a very easy to implement authentication and authorization python library , Authomatic :
  http://peterhudec.github.io/authomatic/index.html
-to manage the login session I've used LoginManager from Flask.
+, to manage the login session I've used LoginManager from Flask.
 
 For protection against CSFR I've used Flask-seaSurf : https://flask-seasurf.readthedocs.org/en/latest/
 
