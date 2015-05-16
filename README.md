@@ -44,7 +44,7 @@ How to install and test:
     drwxrwxr-x 4 g g 4.0K May 15 15:01 FinalProject3-Item-Catalog
 
  ```
- Important:
+ *Important:*
  In the Vagrant file you will need to set the 'synced_folder' with the local path where you cloned the project
  this will synchronize it inside vagrant thus no need to clone it again. Replace the
   <** Local Path to where you've cloned the repository **> with yours. Example : "C:/users/g/Project-P3-Item-Catalog"
@@ -79,14 +79,14 @@ How to install and test:
     pip install Flask-WTF
     pip install flask-seasurf
    ```
-   Gunicorn and Nginx are only necessary if you would like to host this app on a cloud server.
+   *Gunicorn and Nginx* are only necessary if you would like to host this app on a cloud server.
 
  4 - CD inside FinalProject3-Item-Catalog. The database is already generated : salesite.db but you can also initiate
  it running 'python database_setup.py'.
 
  5 - To run the app issue 'python project.py' and then check it out in your browser at http://127.0.0.1:8080
 
- Final note:
+ *Final note:*
   Because some providers don't accept private IP addresses I've register it using a domain name micromarket.no-ip.biz
   if you have problems testing Twitter add it into your hosts file : sudo nano /etc/hosts and add 127.0.0.1 micromarket.no-ip.biz
 
