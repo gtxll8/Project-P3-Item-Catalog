@@ -449,7 +449,8 @@ def showCategory(category_name):
 class SearchForm(Form):
     search = StringField('search', validators=[DataRequired()])
 
-# simple search with the searched word querying description field in sale_item
+
+# simple search; the searched word is used for querying description field in sale_item
 @csrf.exempt
 @app.route('/search', methods=['GET', 'POST'])
 def searchWord():
@@ -475,7 +476,8 @@ def unauthorized():
     flash("Hello Guest, you need to login!")
     return render_template('index.html', items=items)
 
-# 404 page error handling , give user sme viable helping choices
+
+# 404 page error handling , give user some viable helping choices
 @app.errorhandler(404)
 def page_not_found(e):
     # Logging the error in teh log file
