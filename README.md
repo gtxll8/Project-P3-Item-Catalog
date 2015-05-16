@@ -21,7 +21,7 @@ What does this example achieve :
 
 It passes al the requirements asked for in 'Project-P3-Item-Catalog' final project :
  - Implements JSON endpoints and feeds with AtomFeeds ( ex. http://127.0.0.1:8080/recent.atom )
- - Using third party authorization/authentication with Authomatic library ( GitHub, Twitter and Google+ )
+ - Using third party authorization/authentication with Authomatic library( GitHub, Twitter and Google+ )
  - Items stored are categorised, they can be selected and viewed from the drop-down menu.
  - Search in page implemented.
  - Items have images and can be uploaded and managed ( delete/update ).
