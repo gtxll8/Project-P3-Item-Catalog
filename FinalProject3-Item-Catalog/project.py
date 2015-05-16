@@ -26,9 +26,12 @@ from flask.ext.seasurf import SeaSurf
 
 # Initialize the Flask application
 app = Flask(__name__)
+
 # CSRF Protection with Flask seaSurf
 # https://flask-seasurf.readthedocs.org/en/latest/
+# passing your application object back to the extension
 csrf = SeaSurf(app)
+# initialize
 csrf.init_app(app)
 
 # if you want to use sessions this needs to be set
@@ -43,7 +46,7 @@ UPLOAD_FOLDER = './static'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 # Upload folder path
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-# create instance of teh salesite.db
+# create instance of the salesite.db
 engine = create_engine('sqlite:///salesite.db')
 # Bind the engine to the metadata of the Base class so that the
 # declarative can be accessed through a DBSession instance
@@ -86,6 +89,7 @@ def recent_feed():
                  updated=article.last_updated,
                  published=article.last_updated)
     return feed.get_response()
+
 
 # When there is no user logged in use the 'Guest' account
 class Anonymous(AnonymousUserMixin):
@@ -162,6 +166,7 @@ def index():
 
 
 # Login handler, must accept both GET and POST to be able to use OpenID.
+# note that we also use csrf.include to implement Flask-SeaSurf
 @csrf.include
 @app.route('/login/<provider_name>/', methods=['GET', 'POST'])
 def login(provider_name):
@@ -208,6 +213,7 @@ def login(provider_name):
     # Don't forget to return the response.
     return response
 
+
 # Logout current user using flask's LoginManager
 @app.route('/logout')
 @login_required
@@ -223,6 +229,7 @@ def logout():
     items = session.query(SaleItem).all()
     # redirect Guest to main page
     return render_template('index.html', items=items)
+
 
 # Update global user before request in order
 # to cache it for further use
@@ -275,6 +282,7 @@ def upload_file(item_id, user_id):
             session.commit()
             flash("New image added !")
             return redirect(url_for('sellerPage', user_id=user_id))
+
 
 # Used to browse an image file from teh static directory
 @app.route('/static/<filename>')
@@ -444,13 +452,15 @@ def showCategory(category_name):
     items = session.query(SaleItem).filter_by(category_name=category_name).all()
     return render_template('index.html', items=items)
 
-# Thi is needed it so you can pass the search value from teh base template
-# , using global g.search_form to get it in the searchWord() def.
+
+# This is needed it so you can pass the search value from the base template
+# , using global g.search_form to get it in the searchWord() def. Note
+# we use Flask-WTF here, which by default is CSRF proofed
 class SearchForm(Form):
     search = StringField('search', validators=[DataRequired()])
 
 
-# simple search; the searched word is used for querying description field in sale_item
+# Simple search; the searched word is used for querying description field in sale_item
 @csrf.exempt
 @app.route('/search', methods=['GET', 'POST'])
 def searchWord():
@@ -480,8 +490,8 @@ def unauthorized():
 # 404 page error handling , give user some viable helping choices
 @app.errorhandler(404)
 def page_not_found(e):
-    # Logging the error in teh log file
-    app.logger.error('An error occurred')
+    # Logging this error in the log file (example implementing logging)
+    app.logger.error('404 error occurred')
     return render_template('doesnotexist.html'), 404
 
 
