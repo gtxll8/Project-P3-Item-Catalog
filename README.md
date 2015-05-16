@@ -1,6 +1,6 @@
 # Project-P3-Item-Catalog
 
-Project Description:
+**Project Description:**
 
 This repository contains a sample app that I put together and has all the requirements asked to complete
 in Project 3 for Udacity's Full Stack Web Developer Nanodegree.
@@ -17,7 +17,7 @@ I've used a very easy to implement authentication and authorization python libra
 
 For protection against CSFR I've used Flask-SeaSurf : https://flask-seasurf.readthedocs.org/en/latest/
 
-What does this example achieve :
+**What does this example achieve :**
 
 It passes al the requirements asked for in 'Project-P3-Item-Catalog' final project :
  - Implements JSON endpoints and feeds with AtomFeeds ( ex. http://127.0.0.1:8080/recent.atom )
@@ -31,7 +31,7 @@ It passes al the requirements asked for in 'Project-P3-Item-Catalog' final proje
  - Responsive design, mobile device ready using Bootstrap 3.
  - Using Flask-SeaSurf library to prevent CSRF attacks and also Flask-WTF.
 
-How to install and test:
+**How to install and test:**
 
 1 - Install vagrant if you don't have it, use the excellent Udacity's link : https://www.udacity.com/wiki/ud197/install-vagrant
 
@@ -44,7 +44,7 @@ How to install and test:
     drwxrwxr-x 4 g g 4.0K May 15 15:01 FinalProject3-Item-Catalog
 
  ```
- *Important:*
+ **Important:**
  In the Vagrant file you will need to set the 'synced_folder' with the local path where you cloned the project
  this will synchronize it inside vagrant thus no need to clone it again. Replace the
   <** Local Path to where you've cloned the repository **> with yours. Example : "C:/users/g/Project-P3-Item-Catalog"
@@ -79,7 +79,7 @@ How to install and test:
     pip install Flask-WTF
     pip install flask-seasurf
    ```
-   *Gunicorn and Nginx* are only necessary if you would like to host this app on a cloud server.
+   **Gunicorn and Nginx** are only necessary if you would like to host this app on a cloud server.
 
  4 - CD inside FinalProject3-Item-Catalog. The database is already generated : salesite.db but you can also initiate
  it running 'python database_setup.py'.
