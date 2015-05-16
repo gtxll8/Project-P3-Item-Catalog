@@ -5,6 +5,8 @@ Project Description:
 This repository contains a sample app that I put together and has all the requirements asked to complete
 in Project 3 for Udacity's Full Stack Web Developer Nanodegree.
 
+A working example can be seen here : http://micromarket.no-ip.biz/
+
 It's a website that enables users to list items for sale or giveaways, registrations is done using only a
 social ID and it implements OAuth1 and OAuth2. Does not retain any passwords or implements a user accounts
 database, it will only store an ID so it can relate to the items sold.
