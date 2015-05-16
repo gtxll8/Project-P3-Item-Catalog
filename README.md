@@ -9,8 +9,8 @@ It's a website that enables users to list items for sale or giveaways, registrat
 social ID and it implements OAuth1 and OAuth2. Does not retain any passwords or implements a user accounts
 database, it will only store an ID so it can relate to the items sold.
 
-I've used a very easy to implement authentication and authorization python library :
-Authomatic http://peterhudec.github.io/authomatic/index.html
+I've used a very easy to implement authentication and authorization python library , Authomatic :
+ http://peterhudec.github.io/authomatic/index.html
 to manage the login session I've used LoginManager from Flask.
 
 For protection against CSFR I've used Flask-seaSurf : https://flask-seasurf.readthedocs.org/en/latest/
