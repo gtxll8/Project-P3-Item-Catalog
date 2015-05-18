@@ -105,7 +105,7 @@ It passes al the requirements asked for in 'Project-P3-Item-Catalog' final proje
 
  *Final note:*
   In my hosted example because some providers don't accept private IP addresses I've register it using a domain name, in my case: micromarket.no-ip.biz.
-  If you have problems testing Twitter, GitHub or Google on a local vagrant installation, edit your hosts file ex. : sudo nano /etc/hosts and add 127.0.0.1 '<your domain registered>'
+  If you have problems testing Twitter, GitHub or Google on a local vagrant installation, edit your hosts file ex. : sudo nano /etc/hosts and add 127.0.0.1 'http://your domain registered'
 
 
 
