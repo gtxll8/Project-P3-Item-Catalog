@@ -84,7 +84,7 @@ It passes al the requirements asked for in 'Project-P3-Item-Catalog' final proje
  4 - Issue 'vagrant ssh' to connect to vagrant box then once logged in CD inside FinalProject3-Item-Catalog. The database is already generated : salesite.db but you can also initiate
  it running 'python database_setup.py'.
  
- 5 - In order to use the OAuth authentication providers in teh config.py file you will have to provide your own API credentials.
+ 5 - In order to use the OAuth authentication providers, in the config.py file, you will have to provide your own API credentials.
  This can be easily achieved by creating a developer account with any provider that you wish to use. For example Google+, after you setup an OAuth2
  project you will have generated a 'ClientID' and a 'Client Secret' key which you wil have to copy and replace it in the config.py file
  accordingly for teh code to work :
