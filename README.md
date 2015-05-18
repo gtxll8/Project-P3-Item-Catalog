@@ -87,7 +87,7 @@ It passes al the requirements asked for in 'Project-P3-Item-Catalog' final proje
  5 - In order to use the OAuth authentication providers, in the config.py file, you will have to provide your own API credentials.
  This can be easily achieved by creating a developer account with any provider that you wish to use. For example Google+, after you setup an OAuth2
  project you will have generated a 'ClientID' and a 'Client Secret' key which you wil have to copy and replace it in the config.py file
- accordingly for teh code to work :
+ accordingly for the code to work :
  ```
  (Google setup example)
         Client ID for web application
