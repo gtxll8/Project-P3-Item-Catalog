@@ -20,7 +20,10 @@ For protection against CSFR I've used Flask-SeaSurf : https://flask-seasurf.read
 **What does this example achieve :**
 
 It passes al the requirements asked for in 'Project-P3-Item-Catalog' final project :
- - Implements JSON endpoints and feeds with AtomFeeds ( ex. http://127.0.0.1:8080/recent.atom )
+ - Implements JSON endpoints and feeds with AtomFeeds, how to use:
+    JSON - list all items for one user : http://127.0.0.1:8080/forsale/user_name/user/JSON
+    JSON - list all items in a category: http://127.0.0.1:8080/forsale/category_name/JSON
+    FEEDS - recent items : http://127.0.0.1:8080/recent.atom
  - Using third party authorization/authentication with Authomatic library. Using only GitHub, Twitter and Google+, others can be easily implemented.
  - Items stored are categorised, they can be selected and viewed from the drop-down menu.
  - Search in page.
