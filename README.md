@@ -81,7 +81,7 @@ It passes al the requirements asked for in 'Project-P3-Item-Catalog' final proje
    ```
    **Gunicorn and Nginx** are only necessary if you would like to host this app on a cloud server.
 
- 4 - Issue v'agrant ssh' to connect to vagrant box then once logged in CD inside FinalProject3-Item-Catalog. The database is already generated : salesite.db but you can also initiate
+ 4 - Issue 'vagrant ssh' to connect to vagrant box then once logged in CD inside FinalProject3-Item-Catalog. The database is already generated : salesite.db but you can also initiate
  it running 'python database_setup.py'.
  
  5 - In order to use the OAuth authentication providers in teh config.py file you will have to provide your own API credentials.
