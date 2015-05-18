@@ -101,7 +101,7 @@ It passes al the requirements asked for in 'Project-P3-Item-Catalog' final proje
                     http://127.0.0.1:8080/
  ```
 
- 5 - To run the app issue 'python project.py' and then check it out in your browser at http://127.0.0.1:8080
+ 6 - To run the app issue 'python project.py' and then check it out in your browser at http://127.0.0.1:8080
 
  *Final note:*
   In my hosted example because some providers don't accept private IP addresses I've register it using a domain name, in my case: micromarket.no-ip.biz.
